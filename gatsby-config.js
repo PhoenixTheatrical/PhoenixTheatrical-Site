@@ -4,7 +4,10 @@
 module.exports = {
   siteMetadata: {
     title: `PhoenixTheatrical`,
-    siteUrl: `https://www.yourdomain.tld`,
+    siteUrl: `https://www.PhoenixTheatrical.com`,
   },
-  plugins: [],
+  plugins: [
+    "gatsby-plugin-image",
+    "gatsby-plugin-sharp",
+  ],
 }
