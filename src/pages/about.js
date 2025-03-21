@@ -1,6 +1,7 @@
 // Import React
 import * as React from 'react'
 import Layout from '../components/layout'
+import Seo from '../components/seo'
 
 // Define Component
 const AboutPage = () => {
@@ -12,7 +13,7 @@ const AboutPage = () => {
 }
 
 // Metadata Build
-export const Head = () => <title>About Me</title>
+export const Head = () => <Seo title="About Me" />
 
 // Export constents
 export default AboutPage
