@@ -2,286 +2,6 @@ exports.id = "component---src-pages-404-jshead";
 exports.ids = ["component---src-pages-404-jshead"];
 exports.modules = {
 
-/***/ "./node_modules/gatsby-page-utils/dist/apply-trailing-slash-option.js":
-/*!****************************************************************************!*\
-  !*** ./node_modules/gatsby-page-utils/dist/apply-trailing-slash-option.js ***!
-  \****************************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.applyTrailingSlashOption = void 0;
-const endsWithSuffixes = (suffixes, input) => {
-  for (const suffix of suffixes) {
-    if (input.endsWith(suffix)) return true;
-  }
-  return false;
-};
-const suffixes = [`.html`, `.json`, `.js`, `.map`, `.txt`, `.xml`, `.pdf`];
-const applyTrailingSlashOption = (input, option = `always`) => {
-  if (input === `/`) return input;
-  const hasTrailingSlash = input.endsWith(`/`);
-  if (endsWithSuffixes(suffixes, input)) {
-    return input;
-  }
-  if (option === `always`) {
-    return hasTrailingSlash ? input : `${input}/`;
-  }
-  if (option === `never`) {
-    return hasTrailingSlash ? input.slice(0, -1) : input;
-  }
-  return input;
-};
-exports.applyTrailingSlashOption = applyTrailingSlashOption;
-
-/***/ }),
-
-/***/ "./node_modules/gatsby-react-router-scroll/index.js":
-/*!**********************************************************!*\
-  !*** ./node_modules/gatsby-react-router-scroll/index.js ***!
-  \**********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.useScrollRestoration = exports.ScrollContext = void 0;
-var _scrollHandler = __webpack_require__(/*! ./scroll-handler */ "./node_modules/gatsby-react-router-scroll/scroll-handler.js");
-exports.ScrollContext = _scrollHandler.ScrollHandler;
-var _useScrollRestoration = __webpack_require__(/*! ./use-scroll-restoration */ "./node_modules/gatsby-react-router-scroll/use-scroll-restoration.js");
-exports.useScrollRestoration = _useScrollRestoration.useScrollRestoration;
-
-/***/ }),
-
-/***/ "./node_modules/gatsby-react-router-scroll/scroll-handler.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/gatsby-react-router-scroll/scroll-handler.js ***!
-  \*******************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js");
-exports.__esModule = true;
-exports.ScrollHandler = exports.ScrollContext = void 0;
-var _assertThisInitialized2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js"));
-var _inheritsLoose2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inheritsLoose */ "./node_modules/@babel/runtime/helpers/inheritsLoose.js"));
-var React = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
-var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
-var _sessionStorage = __webpack_require__(/*! ./session-storage */ "./node_modules/gatsby-react-router-scroll/session-storage.js");
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-var ScrollContext = /*#__PURE__*/React.createContext(new _sessionStorage.SessionStorage());
-exports.ScrollContext = ScrollContext;
-ScrollContext.displayName = "GatsbyScrollContext";
-var ScrollHandler = /*#__PURE__*/function (_React$Component) {
-  (0, _inheritsLoose2.default)(ScrollHandler, _React$Component);
-  function ScrollHandler() {
-    var _this;
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-    _this = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
-    _this._stateStorage = new _sessionStorage.SessionStorage();
-    _this._isTicking = false;
-    _this._latestKnownScrollY = 0;
-    _this.scrollListener = function () {
-      _this._latestKnownScrollY = window.scrollY;
-      if (!_this._isTicking) {
-        _this._isTicking = true;
-        requestAnimationFrame(_this._saveScroll.bind((0, _assertThisInitialized2.default)(_this)));
-      }
-    };
-    _this.windowScroll = function (position, prevProps) {
-      if (_this.shouldUpdateScroll(prevProps, _this.props)) {
-        window.scrollTo(0, position);
-      }
-    };
-    _this.scrollToHash = function (hash, prevProps) {
-      var node = document.getElementById(hash.substring(1));
-      if (node && _this.shouldUpdateScroll(prevProps, _this.props)) {
-        node.scrollIntoView();
-      }
-    };
-    _this.shouldUpdateScroll = function (prevRouterProps, routerProps) {
-      var shouldUpdateScroll = _this.props.shouldUpdateScroll;
-      if (!shouldUpdateScroll) {
-        return true;
-      }
-
-      // Hack to allow accessing this._stateStorage.
-      return shouldUpdateScroll.call((0, _assertThisInitialized2.default)(_this), prevRouterProps, routerProps);
-    };
-    return _this;
-  }
-  var _proto = ScrollHandler.prototype;
-  _proto._saveScroll = function _saveScroll() {
-    var key = this.props.location.key || null;
-    if (key) {
-      this._stateStorage.save(this.props.location, key, this._latestKnownScrollY);
-    }
-    this._isTicking = false;
-  };
-  _proto.componentDidMount = function componentDidMount() {
-    window.addEventListener("scroll", this.scrollListener);
-    var scrollPosition;
-    var _this$props$location = this.props.location,
-      key = _this$props$location.key,
-      hash = _this$props$location.hash;
-    if (key) {
-      scrollPosition = this._stateStorage.read(this.props.location, key);
-    }
-
-    /** If a hash is present in the browser url as the component mounts (i.e. the user is navigating
-     * from an external website) then scroll to the hash instead of any previously stored scroll
-     * position. */
-    if (hash) {
-      this.scrollToHash(decodeURI(hash), undefined);
-    } else if (scrollPosition) {
-      this.windowScroll(scrollPosition, undefined);
-    }
-  };
-  _proto.componentWillUnmount = function componentWillUnmount() {
-    window.removeEventListener("scroll", this.scrollListener);
-  };
-  _proto.componentDidUpdate = function componentDidUpdate(prevProps) {
-    var _this$props$location2 = this.props.location,
-      hash = _this$props$location2.hash,
-      key = _this$props$location2.key;
-    var scrollPosition;
-    if (key) {
-      scrollPosition = this._stateStorage.read(this.props.location, key);
-    }
-
-    /**  There are two pieces of state: the browser url and
-     * history state which keeps track of scroll position
-     * Native behaviour prescribes that we ought to restore scroll position
-     * when a user navigates back in their browser (this is the `POP` action)
-     * Currently, reach router has a bug that prevents this at https://github.com/reach/router/issues/228
-     * So we _always_ stick to the url as a source of truth — if the url
-     * contains a hash, we scroll to it
-     */
-
-    if (hash) {
-      this.scrollToHash(decodeURI(hash), prevProps);
-    } else {
-      this.windowScroll(scrollPosition, prevProps);
-    }
-  };
-  _proto.render = function render() {
-    return /*#__PURE__*/React.createElement(ScrollContext.Provider, {
-      value: this._stateStorage
-    }, this.props.children);
-  };
-  return ScrollHandler;
-}(React.Component);
-exports.ScrollHandler = ScrollHandler;
-ScrollHandler.propTypes = {
-  shouldUpdateScroll: _propTypes.default.func,
-  children: _propTypes.default.element.isRequired,
-  location: _propTypes.default.object.isRequired
-};
-
-/***/ }),
-
-/***/ "./node_modules/gatsby-react-router-scroll/session-storage.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/gatsby-react-router-scroll/session-storage.js ***!
-  \********************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.SessionStorage = void 0;
-var STATE_KEY_PREFIX = "@@scroll|";
-var GATSBY_ROUTER_SCROLL_STATE = "___GATSBY_REACT_ROUTER_SCROLL";
-var SessionStorage = /*#__PURE__*/function () {
-  function SessionStorage() {}
-  var _proto = SessionStorage.prototype;
-  _proto.read = function read(location, key) {
-    var stateKey = this.getStateKey(location, key);
-    try {
-      var value = window.sessionStorage.getItem(stateKey);
-      return value ? JSON.parse(value) : 0;
-    } catch (e) {
-      if (true) {
-        console.warn("[gatsby-react-router-scroll] Unable to access sessionStorage; sessionStorage is not available.");
-      }
-      if (window && window[GATSBY_ROUTER_SCROLL_STATE] && window[GATSBY_ROUTER_SCROLL_STATE][stateKey]) {
-        return window[GATSBY_ROUTER_SCROLL_STATE][stateKey];
-      }
-      return 0;
-    }
-  };
-  _proto.save = function save(location, key, value) {
-    var stateKey = this.getStateKey(location, key);
-    var storedValue = JSON.stringify(value);
-    try {
-      window.sessionStorage.setItem(stateKey, storedValue);
-    } catch (e) {
-      if (window && window[GATSBY_ROUTER_SCROLL_STATE]) {
-        window[GATSBY_ROUTER_SCROLL_STATE][stateKey] = JSON.parse(storedValue);
-      } else {
-        window[GATSBY_ROUTER_SCROLL_STATE] = {};
-        window[GATSBY_ROUTER_SCROLL_STATE][stateKey] = JSON.parse(storedValue);
-      }
-      if (true) {
-        console.warn("[gatsby-react-router-scroll] Unable to save state in sessionStorage; sessionStorage is not available.");
-      }
-    }
-  };
-  _proto.getStateKey = function getStateKey(location, key) {
-    var stateKeyBase = "" + STATE_KEY_PREFIX + location.pathname;
-    return key === null || typeof key === "undefined" ? stateKeyBase : stateKeyBase + "|" + key;
-  };
-  return SessionStorage;
-}();
-exports.SessionStorage = SessionStorage;
-
-/***/ }),
-
-/***/ "./node_modules/gatsby-react-router-scroll/use-scroll-restoration.js":
-/*!***************************************************************************!*\
-  !*** ./node_modules/gatsby-react-router-scroll/use-scroll-restoration.js ***!
-  \***************************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.useScrollRestoration = useScrollRestoration;
-var _scrollHandler = __webpack_require__(/*! ./scroll-handler */ "./node_modules/gatsby-react-router-scroll/scroll-handler.js");
-var _react = __webpack_require__(/*! react */ "react");
-var _reachRouter = __webpack_require__(/*! @gatsbyjs/reach-router */ "./node_modules/@gatsbyjs/reach-router/dist/index.modern.mjs");
-function useScrollRestoration(identifier) {
-  var location = (0, _reachRouter.useLocation)();
-  var state = (0, _react.useContext)(_scrollHandler.ScrollContext);
-  var ref = (0, _react.useRef)(null);
-  (0, _react.useLayoutEffect)(function () {
-    if (ref.current) {
-      var position = state.read(location, identifier);
-      ref.current.scrollTo(0, position || 0);
-    }
-  }, [location.key]);
-  return {
-    ref: ref,
-    onScroll: function onScroll() {
-      if (ref.current) {
-        state.save(location, identifier, ref.current.scrollTop);
-      }
-    }
-  };
-}
-
-/***/ }),
-
 /***/ "./.cache/context-utils.js":
 /*!*********************************!*\
   !*** ./.cache/context-utils.js ***!
@@ -1549,6 +1269,17 @@ function maybeGetBrowserRedirect(pathname) {
 
 /***/ }),
 
+/***/ "./.cache/redirects.json":
+/*!*******************************!*\
+  !*** ./.cache/redirects.json ***!
+  \*******************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = [];
+
+/***/ }),
+
 /***/ "./.cache/slice.js":
 /*!*************************!*\
   !*** ./.cache/slice.js ***!
@@ -1956,58 +1687,396 @@ function stripPrefix(str, prefix = ``) {
 
 /***/ }),
 
-/***/ "./src/pages/404.js?export=head":
-/*!**************************************!*\
-  !*** ./src/pages/404.js?export=head ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/assertThisInitialized.js ***!
+  \**********************************************************************/
+/***/ ((module) => {
+
+function _assertThisInitialized(e) {
+  if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  return e;
+}
+module.exports = _assertThisInitialized, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/inheritsLoose.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/inheritsLoose.js ***!
+  \**************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var setPrototypeOf = __webpack_require__(/*! ./setPrototypeOf.js */ "./node_modules/@babel/runtime/helpers/setPrototypeOf.js");
+function _inheritsLoose(t, o) {
+  t.prototype = Object.create(o.prototype), t.prototype.constructor = t, setPrototypeOf(t, o);
+}
+module.exports = _inheritsLoose, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/setPrototypeOf.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/setPrototypeOf.js ***!
+  \***************************************************************/
+/***/ ((module) => {
+
+function _setPrototypeOf(t, e) {
+  return module.exports = _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) {
+    return t.__proto__ = e, t;
+  }, module.exports.__esModule = true, module.exports["default"] = module.exports, _setPrototypeOf(t, e);
+}
+module.exports = _setPrototypeOf, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "./node_modules/gatsby-core-utils/dist/create-content-digest.mjs":
+/*!***********************************************************************!*\
+  !*** ./node_modules/gatsby-core-utils/dist/create-content-digest.mjs ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Head: () => (/* binding */ Head),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   createContentDigest: () => (/* binding */ createContentDigest)
 /* harmony export */ });
+/* harmony import */ var crypto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! crypto */ "crypto");
+/* harmony import */ var node_object_hash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! node-object-hash */ "./node_modules/node-object-hash/dist/hasher.js");
+
+
+const hasher = node_object_hash__WEBPACK_IMPORTED_MODULE_1__({
+  coerce: false,
+  alg: `md5`,
+  enc: `hex`,
+  sort: {
+    map: true,
+    object: true,
+    array: false,
+    set: false
+  }
+});
+const hashPrimitive = input => crypto__WEBPACK_IMPORTED_MODULE_0__.createHash(`md5`).update(input).digest(`hex`);
+
+/**
+ * Hashes an input using md5 hash of hexadecimal digest.
+ *
+ * @param input The input to encrypt
+ * @return The content digest
+ */
+
+const createContentDigest = input => {
+  if (typeof input === `object` && !Buffer.isBuffer(input)) {
+    return hasher.hash(input);
+  }
+  return hashPrimitive(input);
+};
+
+/***/ }),
+
+/***/ "./node_modules/gatsby-link/dist/index.modern.mjs":
+/*!********************************************************!*\
+  !*** ./node_modules/gatsby-link/dist/index.modern.mjs ***!
+  \********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Link: () => (/* binding */ E),
+/* harmony export */   navigate: () => (/* binding */ g),
+/* harmony export */   parsePath: () => (/* binding */ a),
+/* harmony export */   withAssetPrefix: () => (/* binding */ v),
+/* harmony export */   withPrefix: () => (/* binding */ f)
+/* harmony export */ });
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var gatsby__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! gatsby */ "./.cache/gatsby-browser-entry.js");
+/* harmony import */ var _gatsbyjs_reach_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @gatsbyjs/reach-router */ "./node_modules/@gatsbyjs/reach-router/dist/index.modern.mjs");
+/* harmony import */ var gatsby_page_utils_apply_trailing_slash_option__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! gatsby-page-utils/apply-trailing-slash-option */ "./node_modules/gatsby-page-utils/dist/apply-trailing-slash-option.js");
+"use client"
+;function i(){return i=Object.assign?Object.assign.bind():function(t){for(var e=1;e<arguments.length;e++){var n=arguments[e];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(t[r]=n[r])}return t},i.apply(this,arguments)}function a(t){let e=t||"/",n="",r="";const o=e.indexOf("#");-1!==o&&(r=e.slice(o),e=e.slice(0,o));const s=e.indexOf("?");return-1!==s&&(n=e.slice(s),e=e.slice(0,s)),{pathname:e,search:"?"===n?"":n,hash:"#"===r?"":r}}const c=/^[a-zA-Z][a-zA-Z\d+\-.]*?:/,l=t=>{if("string"==typeof t)return!(t=>c.test(t))(t)},p=()=> true? true?"":0:0,h=()=> true? true?"":0:0;function f(t,e=p()){var n;if(!l(t))return t;if(t.startsWith("./")||t.startsWith("../"))return t;const r=null!=(n=null!=e?e:h())?n:"/";return`${null!=r&&r.endsWith("/")?r.slice(0,-1):r}${t.startsWith("/")?t:`/${t}`}`}const u=t=>null==t?void 0:t.startsWith("/"),_=()=> true?"always":0;function d(t,e){const{pathname:n,search:r,hash:o}=a(t);return`${(0,gatsby_page_utils_apply_trailing_slash_option__WEBPACK_IMPORTED_MODULE_2__.applyTrailingSlashOption)(n,e)}${r}${o}`}const m=(t,e)=>"number"==typeof t?t:l(t)?u(t)?function(t){const e=f(t),n=_();return"always"===n||"never"===n?d(e,n):e}(t):function(t,e){if(u(t))return t;const r=_(),o=(0,_gatsbyjs_reach_router__WEBPACK_IMPORTED_MODULE_1__.resolve)(t,e);return"always"===r||"never"===r?d(o,r):o}(t,e):t,y=["to","getProps","onClick","onMouseEnter","activeClassName","activeStyle","innerRef","partiallyActive","state","replace","_location"];function v(t){return f(t,h())}const b={activeClassName:prop_types__WEBPACK_IMPORTED_MODULE_3__.string,activeStyle:prop_types__WEBPACK_IMPORTED_MODULE_3__.object,partiallyActive:prop_types__WEBPACK_IMPORTED_MODULE_3__.bool};function w(t){/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(_gatsbyjs_reach_router__WEBPACK_IMPORTED_MODULE_1__.Location,null,({location:n})=>/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(P,i({},t,{_location:n})))}class P extends react__WEBPACK_IMPORTED_MODULE_0__.Component{constructor(t){super(t),this.defaultGetProps=({isPartiallyCurrent:t,isCurrent:e})=>(this.props.partiallyActive?t:e)?{className:[this.props.className,this.props.activeClassName].filter(Boolean).join(" "),style:i({},this.props.style,this.props.activeStyle)}:null;let e=!1;"undefined"!=typeof window&&window.IntersectionObserver&&(e=!0),this.state={IOSupported:e},this.abortPrefetch=null,this.handleRef=this.handleRef.bind(this)}_prefetch(){let t=window.location.pathname+window.location.search;this.props._location&&this.props._location.pathname&&(t=this.props._location.pathname+this.props._location.search);const e=a(m(this.props.to,t)),n=e.pathname+e.search;if(t!==n)return ___loader.enqueue(n)}componentWillUnmount(){if(!this.io)return;const{instance:t,el:e}=this.io;this.abortPrefetch&&this.abortPrefetch.abort(),t.unobserve(e),t.disconnect()}handleRef(t){this.props.innerRef&&Object.prototype.hasOwnProperty.call(this.props.innerRef,"current")?this.props.innerRef.current=t:this.props.innerRef&&this.props.innerRef(t),this.state.IOSupported&&t&&(this.io=((t,e)=>{const n=new window.IntersectionObserver(n=>{n.forEach(n=>{t===n.target&&e(n.isIntersecting||n.intersectionRatio>0)})});return n.observe(t),{instance:n,el:t}})(t,t=>{t?this.abortPrefetch=this._prefetch():this.abortPrefetch&&this.abortPrefetch.abort()}))}render(){const t=this.props,{to:n,getProps:r=this.defaultGetProps,onClick:s,onMouseEnter:c,state:p,replace:h,_location:f}=t,u=function(t,e){if(null==t)return{};var n,r,o={},s=Object.keys(t);for(r=0;r<s.length;r++)e.indexOf(n=s[r])>=0||(o[n]=t[n]);return o}(t,y); false||l(n)||console.warn(`External link ${n} was detected in a Link component. Use the Link component only for internal links. See: https://gatsby.dev/internal-links`);const _=m(n,f.pathname);return l(_)?/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_gatsbyjs_reach_router__WEBPACK_IMPORTED_MODULE_1__.Link,i({to:_,state:p,getProps:r,innerRef:this.handleRef,onMouseEnter:t=>{c&&c(t);const e=a(_);___loader.hovering(e.pathname+e.search)},onClick:t=>{if(s&&s(t),!(0!==t.button||this.props.target||t.defaultPrevented||t.metaKey||t.altKey||t.ctrlKey||t.shiftKey)){t.preventDefault();let e=h;const n=encodeURI(_)===f.pathname;"boolean"!=typeof h&&n&&(e=!0),window.___navigate(_,{state:p,replace:e})}return!0}},u)):/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a",i({href:_},u))}}P.propTypes=i({},b,{onClick:prop_types__WEBPACK_IMPORTED_MODULE_3__.func,to:prop_types__WEBPACK_IMPORTED_MODULE_3__.string.isRequired,replace:prop_types__WEBPACK_IMPORTED_MODULE_3__.bool,state:prop_types__WEBPACK_IMPORTED_MODULE_3__.object});const E=react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((t,n)=>/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(w,i({innerRef:n},t))),g=(t,e)=>{window.___navigate(m(t,window.location.pathname),e)};
+//# sourceMappingURL=index.modern.mjs.map
 
 
-const pageStyles = {
-  color: "#232129",
-  padding: "96px",
-  fontFamily: "-apple-system, Roboto, sans-serif, serif"
+/***/ }),
+
+/***/ "./node_modules/gatsby-page-utils/dist/apply-trailing-slash-option.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/gatsby-page-utils/dist/apply-trailing-slash-option.js ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.applyTrailingSlashOption = void 0;
+const endsWithSuffixes = (suffixes, input) => {
+  for (const suffix of suffixes) {
+    if (input.endsWith(suffix)) return true;
+  }
+  return false;
 };
-const headingStyles = {
-  marginTop: 0,
-  marginBottom: 64,
-  maxWidth: 320
+const suffixes = [`.html`, `.json`, `.js`, `.map`, `.txt`, `.xml`, `.pdf`];
+const applyTrailingSlashOption = (input, option = `always`) => {
+  if (input === `/`) return input;
+  const hasTrailingSlash = input.endsWith(`/`);
+  if (endsWithSuffixes(suffixes, input)) {
+    return input;
+  }
+  if (option === `always`) {
+    return hasTrailingSlash ? input : `${input}/`;
+  }
+  if (option === `never`) {
+    return hasTrailingSlash ? input.slice(0, -1) : input;
+  }
+  return input;
 };
-const paragraphStyles = {
-  marginBottom: 48
+exports.applyTrailingSlashOption = applyTrailingSlashOption;
+
+/***/ }),
+
+/***/ "./node_modules/gatsby-react-router-scroll/index.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/gatsby-react-router-scroll/index.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.useScrollRestoration = exports.ScrollContext = void 0;
+var _scrollHandler = __webpack_require__(/*! ./scroll-handler */ "./node_modules/gatsby-react-router-scroll/scroll-handler.js");
+exports.ScrollContext = _scrollHandler.ScrollHandler;
+var _useScrollRestoration = __webpack_require__(/*! ./use-scroll-restoration */ "./node_modules/gatsby-react-router-scroll/use-scroll-restoration.js");
+exports.useScrollRestoration = _useScrollRestoration.useScrollRestoration;
+
+/***/ }),
+
+/***/ "./node_modules/gatsby-react-router-scroll/scroll-handler.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/gatsby-react-router-scroll/scroll-handler.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+exports.__esModule = true;
+exports.ScrollHandler = exports.ScrollContext = void 0;
+var _assertThisInitialized2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js"));
+var _inheritsLoose2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inheritsLoose */ "./node_modules/@babel/runtime/helpers/inheritsLoose.js"));
+var React = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
+var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
+var _sessionStorage = __webpack_require__(/*! ./session-storage */ "./node_modules/gatsby-react-router-scroll/session-storage.js");
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var ScrollContext = /*#__PURE__*/React.createContext(new _sessionStorage.SessionStorage());
+exports.ScrollContext = ScrollContext;
+ScrollContext.displayName = "GatsbyScrollContext";
+var ScrollHandler = /*#__PURE__*/function (_React$Component) {
+  (0, _inheritsLoose2.default)(ScrollHandler, _React$Component);
+  function ScrollHandler() {
+    var _this;
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
+    _this._stateStorage = new _sessionStorage.SessionStorage();
+    _this._isTicking = false;
+    _this._latestKnownScrollY = 0;
+    _this.scrollListener = function () {
+      _this._latestKnownScrollY = window.scrollY;
+      if (!_this._isTicking) {
+        _this._isTicking = true;
+        requestAnimationFrame(_this._saveScroll.bind((0, _assertThisInitialized2.default)(_this)));
+      }
+    };
+    _this.windowScroll = function (position, prevProps) {
+      if (_this.shouldUpdateScroll(prevProps, _this.props)) {
+        window.scrollTo(0, position);
+      }
+    };
+    _this.scrollToHash = function (hash, prevProps) {
+      var node = document.getElementById(hash.substring(1));
+      if (node && _this.shouldUpdateScroll(prevProps, _this.props)) {
+        node.scrollIntoView();
+      }
+    };
+    _this.shouldUpdateScroll = function (prevRouterProps, routerProps) {
+      var shouldUpdateScroll = _this.props.shouldUpdateScroll;
+      if (!shouldUpdateScroll) {
+        return true;
+      }
+
+      // Hack to allow accessing this._stateStorage.
+      return shouldUpdateScroll.call((0, _assertThisInitialized2.default)(_this), prevRouterProps, routerProps);
+    };
+    return _this;
+  }
+  var _proto = ScrollHandler.prototype;
+  _proto._saveScroll = function _saveScroll() {
+    var key = this.props.location.key || null;
+    if (key) {
+      this._stateStorage.save(this.props.location, key, this._latestKnownScrollY);
+    }
+    this._isTicking = false;
+  };
+  _proto.componentDidMount = function componentDidMount() {
+    window.addEventListener("scroll", this.scrollListener);
+    var scrollPosition;
+    var _this$props$location = this.props.location,
+      key = _this$props$location.key,
+      hash = _this$props$location.hash;
+    if (key) {
+      scrollPosition = this._stateStorage.read(this.props.location, key);
+    }
+
+    /** If a hash is present in the browser url as the component mounts (i.e. the user is navigating
+     * from an external website) then scroll to the hash instead of any previously stored scroll
+     * position. */
+    if (hash) {
+      this.scrollToHash(decodeURI(hash), undefined);
+    } else if (scrollPosition) {
+      this.windowScroll(scrollPosition, undefined);
+    }
+  };
+  _proto.componentWillUnmount = function componentWillUnmount() {
+    window.removeEventListener("scroll", this.scrollListener);
+  };
+  _proto.componentDidUpdate = function componentDidUpdate(prevProps) {
+    var _this$props$location2 = this.props.location,
+      hash = _this$props$location2.hash,
+      key = _this$props$location2.key;
+    var scrollPosition;
+    if (key) {
+      scrollPosition = this._stateStorage.read(this.props.location, key);
+    }
+
+    /**  There are two pieces of state: the browser url and
+     * history state which keeps track of scroll position
+     * Native behaviour prescribes that we ought to restore scroll position
+     * when a user navigates back in their browser (this is the `POP` action)
+     * Currently, reach router has a bug that prevents this at https://github.com/reach/router/issues/228
+     * So we _always_ stick to the url as a source of truth — if the url
+     * contains a hash, we scroll to it
+     */
+
+    if (hash) {
+      this.scrollToHash(decodeURI(hash), prevProps);
+    } else {
+      this.windowScroll(scrollPosition, prevProps);
+    }
+  };
+  _proto.render = function render() {
+    return /*#__PURE__*/React.createElement(ScrollContext.Provider, {
+      value: this._stateStorage
+    }, this.props.children);
+  };
+  return ScrollHandler;
+}(React.Component);
+exports.ScrollHandler = ScrollHandler;
+ScrollHandler.propTypes = {
+  shouldUpdateScroll: _propTypes.default.func,
+  children: _propTypes.default.element.isRequired,
+  location: _propTypes.default.object.isRequired
 };
-const codeStyles = {
-  color: "#8A6534",
-  padding: 4,
-  backgroundColor: "#FFF4DB",
-  fontSize: "1.25rem",
-  borderRadius: 4
-};
-const NotFoundPage = () => {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("main", {
-    style: pageStyles
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", {
-    style: headingStyles
-  }, "Page not found"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
-    style: paragraphStyles
-  }, "Sorry \uD83D\uDE14, we couldn\u2019t find what you were looking for.", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("br", null),  true ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("br", null), "Try creating a page in ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("code", {
-    style: codeStyles
-  }, "src/pages/"), ".", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("br", null)) : 0, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(gatsby__WEBPACK_IMPORTED_MODULE_1__.Link, {
-    to: "/"
-  }, "Go home"), "."));
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NotFoundPage);
-const Head = () => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("title", null, "Not found");
+
+/***/ }),
+
+/***/ "./node_modules/gatsby-react-router-scroll/session-storage.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/gatsby-react-router-scroll/session-storage.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.SessionStorage = void 0;
+var STATE_KEY_PREFIX = "@@scroll|";
+var GATSBY_ROUTER_SCROLL_STATE = "___GATSBY_REACT_ROUTER_SCROLL";
+var SessionStorage = /*#__PURE__*/function () {
+  function SessionStorage() {}
+  var _proto = SessionStorage.prototype;
+  _proto.read = function read(location, key) {
+    var stateKey = this.getStateKey(location, key);
+    try {
+      var value = window.sessionStorage.getItem(stateKey);
+      return value ? JSON.parse(value) : 0;
+    } catch (e) {
+      if (true) {
+        console.warn("[gatsby-react-router-scroll] Unable to access sessionStorage; sessionStorage is not available.");
+      }
+      if (window && window[GATSBY_ROUTER_SCROLL_STATE] && window[GATSBY_ROUTER_SCROLL_STATE][stateKey]) {
+        return window[GATSBY_ROUTER_SCROLL_STATE][stateKey];
+      }
+      return 0;
+    }
+  };
+  _proto.save = function save(location, key, value) {
+    var stateKey = this.getStateKey(location, key);
+    var storedValue = JSON.stringify(value);
+    try {
+      window.sessionStorage.setItem(stateKey, storedValue);
+    } catch (e) {
+      if (window && window[GATSBY_ROUTER_SCROLL_STATE]) {
+        window[GATSBY_ROUTER_SCROLL_STATE][stateKey] = JSON.parse(storedValue);
+      } else {
+        window[GATSBY_ROUTER_SCROLL_STATE] = {};
+        window[GATSBY_ROUTER_SCROLL_STATE][stateKey] = JSON.parse(storedValue);
+      }
+      if (true) {
+        console.warn("[gatsby-react-router-scroll] Unable to save state in sessionStorage; sessionStorage is not available.");
+      }
+    }
+  };
+  _proto.getStateKey = function getStateKey(location, key) {
+    var stateKeyBase = "" + STATE_KEY_PREFIX + location.pathname;
+    return key === null || typeof key === "undefined" ? stateKeyBase : stateKeyBase + "|" + key;
+  };
+  return SessionStorage;
+}();
+exports.SessionStorage = SessionStorage;
+
+/***/ }),
+
+/***/ "./node_modules/gatsby-react-router-scroll/use-scroll-restoration.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/gatsby-react-router-scroll/use-scroll-restoration.js ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.useScrollRestoration = useScrollRestoration;
+var _scrollHandler = __webpack_require__(/*! ./scroll-handler */ "./node_modules/gatsby-react-router-scroll/scroll-handler.js");
+var _react = __webpack_require__(/*! react */ "react");
+var _reachRouter = __webpack_require__(/*! @gatsbyjs/reach-router */ "./node_modules/@gatsbyjs/reach-router/dist/index.modern.mjs");
+function useScrollRestoration(identifier) {
+  var location = (0, _reachRouter.useLocation)();
+  var state = (0, _react.useContext)(_scrollHandler.ScrollContext);
+  var ref = (0, _react.useRef)(null);
+  (0, _react.useLayoutEffect)(function () {
+    if (ref.current) {
+      var position = state.read(location, identifier);
+      ref.current.scrollTo(0, position || 0);
+    }
+  }, [location.key]);
+  return {
+    ref: ref,
+    onScroll: function onScroll() {
+      if (ref.current) {
+        state.save(location, identifier, ref.current.scrollTop);
+      }
+    }
+  };
+}
 
 /***/ }),
 
@@ -3498,133 +3567,58 @@ if (false) {} else {
 
 /***/ }),
 
-/***/ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/assertThisInitialized.js ***!
-  \**********************************************************************/
-/***/ ((module) => {
-
-function _assertThisInitialized(self) {
-  if (self === void 0) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-  return self;
-}
-module.exports = _assertThisInitialized, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/inheritsLoose.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/inheritsLoose.js ***!
-  \**************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var setPrototypeOf = __webpack_require__(/*! ./setPrototypeOf.js */ "./node_modules/@babel/runtime/helpers/setPrototypeOf.js");
-function _inheritsLoose(subClass, superClass) {
-  subClass.prototype = Object.create(superClass.prototype);
-  subClass.prototype.constructor = subClass;
-  setPrototypeOf(subClass, superClass);
-}
-module.exports = _inheritsLoose, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/setPrototypeOf.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/setPrototypeOf.js ***!
-  \***************************************************************/
-/***/ ((module) => {
-
-function _setPrototypeOf(o, p) {
-  module.exports = _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) {
-    o.__proto__ = p;
-    return o;
-  }, module.exports.__esModule = true, module.exports["default"] = module.exports;
-  return _setPrototypeOf(o, p);
-}
-module.exports = _setPrototypeOf, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-
-/***/ "./node_modules/gatsby-core-utils/dist/create-content-digest.mjs":
-/*!***********************************************************************!*\
-  !*** ./node_modules/gatsby-core-utils/dist/create-content-digest.mjs ***!
-  \***********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+/***/ "./src/pages/404.js?export=head":
+/*!**************************************!*\
+  !*** ./src/pages/404.js?export=head ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   createContentDigest: () => (/* binding */ createContentDigest)
+/* harmony export */   Head: () => (/* binding */ Head),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var crypto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! crypto */ "crypto");
-/* harmony import */ var node_object_hash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! node-object-hash */ "./node_modules/node-object-hash/dist/hasher.js");
-
-
-const hasher = node_object_hash__WEBPACK_IMPORTED_MODULE_1__({
-  coerce: false,
-  alg: `md5`,
-  enc: `hex`,
-  sort: {
-    map: true,
-    object: true,
-    array: false,
-    set: false
-  }
-});
-const hashPrimitive = input => crypto__WEBPACK_IMPORTED_MODULE_0__.createHash(`md5`).update(input).digest(`hex`);
-
-/**
- * Hashes an input using md5 hash of hexadecimal digest.
- *
- * @param input The input to encrypt
- * @return The content digest
- */
-
-const createContentDigest = input => {
-  if (typeof input === `object` && !Buffer.isBuffer(input)) {
-    return hasher.hash(input);
-  }
-  return hashPrimitive(input);
-};
-
-/***/ }),
-
-/***/ "./node_modules/gatsby-link/dist/index.modern.mjs":
-/*!********************************************************!*\
-  !*** ./node_modules/gatsby-link/dist/index.modern.mjs ***!
-  \********************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Link: () => (/* binding */ E),
-/* harmony export */   navigate: () => (/* binding */ g),
-/* harmony export */   parsePath: () => (/* binding */ a),
-/* harmony export */   withAssetPrefix: () => (/* binding */ v),
-/* harmony export */   withPrefix: () => (/* binding */ f)
-/* harmony export */ });
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var _gatsbyjs_reach_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @gatsbyjs/reach-router */ "./node_modules/@gatsbyjs/reach-router/dist/index.modern.mjs");
-/* harmony import */ var gatsby_page_utils_apply_trailing_slash_option__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! gatsby-page-utils/apply-trailing-slash-option */ "./node_modules/gatsby-page-utils/dist/apply-trailing-slash-option.js");
-"use client"
-;function i(){return i=Object.assign?Object.assign.bind():function(t){for(var e=1;e<arguments.length;e++){var n=arguments[e];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(t[r]=n[r])}return t},i.apply(this,arguments)}function a(t){let e=t||"/",n="",r="";const o=e.indexOf("#");-1!==o&&(r=e.slice(o),e=e.slice(0,o));const s=e.indexOf("?");return-1!==s&&(n=e.slice(s),e=e.slice(0,s)),{pathname:e,search:"?"===n?"":n,hash:"#"===r?"":r}}const c=/^[a-zA-Z][a-zA-Z\d+\-.]*?:/,l=t=>{if("string"==typeof t)return!(t=>c.test(t))(t)},p=()=> true? true?"":0:0,h=()=> true? true?"":0:0;function f(t,e=p()){var n;if(!l(t))return t;if(t.startsWith("./")||t.startsWith("../"))return t;const r=null!=(n=null!=e?e:h())?n:"/";return`${null!=r&&r.endsWith("/")?r.slice(0,-1):r}${t.startsWith("/")?t:`/${t}`}`}const u=t=>null==t?void 0:t.startsWith("/"),_=()=> true?"always":0;function d(t,e){const{pathname:n,search:r,hash:o}=a(t);return`${(0,gatsby_page_utils_apply_trailing_slash_option__WEBPACK_IMPORTED_MODULE_2__.applyTrailingSlashOption)(n,e)}${r}${o}`}const m=(t,e)=>"number"==typeof t?t:l(t)?u(t)?function(t){const e=f(t),n=_();return"always"===n||"never"===n?d(e,n):e}(t):function(t,e){if(u(t))return t;const r=_(),o=(0,_gatsbyjs_reach_router__WEBPACK_IMPORTED_MODULE_1__.resolve)(t,e);return"always"===r||"never"===r?d(o,r):o}(t,e):t,y=["to","getProps","onClick","onMouseEnter","activeClassName","activeStyle","innerRef","partiallyActive","state","replace","_location"];function v(t){return f(t,h())}const b={activeClassName:prop_types__WEBPACK_IMPORTED_MODULE_3__.string,activeStyle:prop_types__WEBPACK_IMPORTED_MODULE_3__.object,partiallyActive:prop_types__WEBPACK_IMPORTED_MODULE_3__.bool};function w(t){/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(_gatsbyjs_reach_router__WEBPACK_IMPORTED_MODULE_1__.Location,null,({location:n})=>/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(P,i({},t,{_location:n})))}class P extends react__WEBPACK_IMPORTED_MODULE_0__.Component{constructor(t){super(t),this.defaultGetProps=({isPartiallyCurrent:t,isCurrent:e})=>(this.props.partiallyActive?t:e)?{className:[this.props.className,this.props.activeClassName].filter(Boolean).join(" "),style:i({},this.props.style,this.props.activeStyle)}:null;let e=!1;"undefined"!=typeof window&&window.IntersectionObserver&&(e=!0),this.state={IOSupported:e},this.abortPrefetch=null,this.handleRef=this.handleRef.bind(this)}_prefetch(){let t=window.location.pathname+window.location.search;this.props._location&&this.props._location.pathname&&(t=this.props._location.pathname+this.props._location.search);const e=a(m(this.props.to,t)),n=e.pathname+e.search;if(t!==n)return ___loader.enqueue(n)}componentWillUnmount(){if(!this.io)return;const{instance:t,el:e}=this.io;this.abortPrefetch&&this.abortPrefetch.abort(),t.unobserve(e),t.disconnect()}handleRef(t){this.props.innerRef&&Object.prototype.hasOwnProperty.call(this.props.innerRef,"current")?this.props.innerRef.current=t:this.props.innerRef&&this.props.innerRef(t),this.state.IOSupported&&t&&(this.io=((t,e)=>{const n=new window.IntersectionObserver(n=>{n.forEach(n=>{t===n.target&&e(n.isIntersecting||n.intersectionRatio>0)})});return n.observe(t),{instance:n,el:t}})(t,t=>{t?this.abortPrefetch=this._prefetch():this.abortPrefetch&&this.abortPrefetch.abort()}))}render(){const t=this.props,{to:n,getProps:r=this.defaultGetProps,onClick:s,onMouseEnter:c,state:p,replace:h,_location:f}=t,u=function(t,e){if(null==t)return{};var n,r,o={},s=Object.keys(t);for(r=0;r<s.length;r++)e.indexOf(n=s[r])>=0||(o[n]=t[n]);return o}(t,y); false||l(n)||console.warn(`External link ${n} was detected in a Link component. Use the Link component only for internal links. See: https://gatsby.dev/internal-links`);const _=m(n,f.pathname);return l(_)?/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_gatsbyjs_reach_router__WEBPACK_IMPORTED_MODULE_1__.Link,i({to:_,state:p,getProps:r,innerRef:this.handleRef,onMouseEnter:t=>{c&&c(t);const e=a(_);___loader.hovering(e.pathname+e.search)},onClick:t=>{if(s&&s(t),!(0!==t.button||this.props.target||t.defaultPrevented||t.metaKey||t.altKey||t.ctrlKey||t.shiftKey)){t.preventDefault();let e=h;const n=encodeURI(_)===f.pathname;"boolean"!=typeof h&&n&&(e=!0),window.___navigate(_,{state:p,replace:e})}return!0}},u)):/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a",i({href:_},u))}}P.propTypes=i({},b,{onClick:prop_types__WEBPACK_IMPORTED_MODULE_3__.func,to:prop_types__WEBPACK_IMPORTED_MODULE_3__.string.isRequired,replace:prop_types__WEBPACK_IMPORTED_MODULE_3__.bool,state:prop_types__WEBPACK_IMPORTED_MODULE_3__.object});const E=react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((t,n)=>/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(w,i({innerRef:n},t))),g=(t,e)=>{window.___navigate(m(t,window.location.pathname),e)};
-//# sourceMappingURL=index.modern.mjs.map
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var gatsby__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! gatsby */ "./.cache/gatsby-browser-entry.js");
 
 
-/***/ }),
-
-/***/ "./.cache/redirects.json":
-/*!*******************************!*\
-  !*** ./.cache/redirects.json ***!
-  \*******************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = [];
+const pageStyles = {
+  color: "#232129",
+  padding: "96px",
+  fontFamily: "-apple-system, Roboto, sans-serif, serif"
+};
+const headingStyles = {
+  marginTop: 0,
+  marginBottom: 64,
+  maxWidth: 320
+};
+const paragraphStyles = {
+  marginBottom: 48
+};
+const codeStyles = {
+  color: "#8A6534",
+  padding: 4,
+  backgroundColor: "#FFF4DB",
+  fontSize: "1.25rem",
+  borderRadius: 4
+};
+const NotFoundPage = () => {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("main", {
+    style: pageStyles
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", {
+    style: headingStyles
+  }, "Page not found"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+    style: paragraphStyles
+  }, "Sorry \uD83D\uDE14, we couldn\u2019t find what you were looking for.", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("br", null),  true ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("br", null), "Try creating a page in ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("code", {
+    style: codeStyles
+  }, "src/pages/"), ".", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("br", null)) : 0, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(gatsby__WEBPACK_IMPORTED_MODULE_1__.Link, {
+    to: "/"
+  }, "Go home"), "."));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NotFoundPage);
+const Head = () => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("title", null, "Not found");
 
 /***/ })
 

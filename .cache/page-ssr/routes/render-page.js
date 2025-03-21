@@ -1,6 +1,523 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./.cache/_this_is_virtual_fs_path_/$virtual/async-requires.js":
+/*!*********************************************************************!*\
+  !*** ./.cache/_this_is_virtual_fs_path_/$virtual/async-requires.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+exports.components = {
+  "component---cache-dev-404-page-js": () => __webpack_require__.e(/*! import() | component---cache-dev-404-page-js */ "component---cache-dev-404-page-js").then(__webpack_require__.bind(__webpack_require__, /*! ./../../dev-404-page.js?export=default */ "./.cache/dev-404-page.js?export=default")),
+  "component---src-pages-404-js": () => __webpack_require__.e(/*! import() | component---src-pages-404-js */ "component---src-pages-404-js").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/404.js?export=default */ "./src/pages/404.js?export=default")),
+  "component---src-pages-about-js": () => __webpack_require__.e(/*! import() | component---src-pages-about-js */ "component---src-pages-about-js").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/about.js?export=default */ "./src/pages/about.js?export=default")),
+  "component---src-pages-blog-js": () => __webpack_require__.e(/*! import() | component---src-pages-blog-js */ "component---src-pages-blog-js").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/blog.js?export=default */ "./src/pages/blog.js?export=default")),
+  "component---src-pages-index-js": () => __webpack_require__.e(/*! import() | component---src-pages-index-js */ "component---src-pages-index-js").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/index.js?export=default */ "./src/pages/index.js?export=default"))
+};
+
+exports.head = {
+  "component---src-pages-404-js": () => __webpack_require__.e(/*! import() | component---src-pages-404-jshead */ "component---src-pages-404-jshead").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/404.js?export=head */ "./src/pages/404.js?export=head")),
+  "component---src-pages-about-js": () => __webpack_require__.e(/*! import() | component---src-pages-about-jshead */ "component---src-pages-about-jshead").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/about.js?export=head */ "./src/pages/about.js?export=head")),
+  "component---src-pages-blog-js": () => __webpack_require__.e(/*! import() | component---src-pages-blog-jshead */ "component---src-pages-blog-jshead").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/blog.js?export=head */ "./src/pages/blog.js?export=head")),
+  "component---src-pages-index-js": () => __webpack_require__.e(/*! import() | component---src-pages-index-jshead */ "component---src-pages-index-jshead").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/index.js?export=head */ "./src/pages/index.js?export=head"))
+};
+
+/***/ }),
+
+/***/ "./.cache/api-runner-ssr.js":
+/*!**********************************!*\
+  !*** ./.cache/api-runner-ssr.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   apiRunner: () => (/* binding */ apiRunner),
+/* harmony export */   apiRunnerAsync: () => (/* binding */ apiRunnerAsync)
+/* harmony export */ });
+var plugins = [{
+  name: 'gatsby-plugin-image',
+  plugin: __webpack_require__(/*! ./node_modules/gatsby-plugin-image/gatsby-ssr.js */ "./node_modules/gatsby-plugin-image/gatsby-ssr.js"),
+  options: {
+    "plugins": []
+  }
+}, {
+  name: 'partytown',
+  plugin: __webpack_require__(/*! ./node_modules/gatsby/dist/internal-plugins/partytown/gatsby-ssr.js */ "./node_modules/gatsby/dist/internal-plugins/partytown/gatsby-ssr.js"),
+  options: {
+    "plugins": []
+  }
+}];
+/* global plugins */
+// During bootstrap, we write requires at top of this file which looks like:
+// var plugins = [
+//   {
+//     plugin: require("/path/to/plugin1/gatsby-ssr.js"),
+//     options: { ... },
+//   },
+//   {
+//     plugin: require("/path/to/plugin2/gatsby-ssr.js"),
+//     options: { ... },
+//   },
+// ]
+
+const apis = __webpack_require__(/*! ./api-ssr-docs */ "./.cache/api-ssr-docs.js");
+function augmentErrorWithPlugin(plugin, err) {
+  if (plugin.name !== `default-site-plugin`) {
+    // default-site-plugin is user code and will print proper stack trace,
+    // so no point in annotating error message pointing out which plugin is root of the problem
+    err.message += ` (from plugin: ${plugin.name})`;
+  }
+  throw err;
+}
+function apiRunner(api, args, defaultReturn, argTransform) {
+  if (!apis[api]) {
+    console.log(`This API doesn't exist`, api);
+  }
+  const results = [];
+  plugins.forEach(plugin => {
+    const apiFn = plugin.plugin[api];
+    if (!apiFn) {
+      return;
+    }
+    try {
+      const result = apiFn(args, plugin.options);
+      if (result && argTransform) {
+        args = argTransform({
+          args,
+          result
+        });
+      }
+
+      // This if case keeps behaviour as before, we should allow undefined here as the api is defined
+      // TODO V4
+      if (typeof result !== `undefined`) {
+        results.push(result);
+      }
+    } catch (e) {
+      augmentErrorWithPlugin(plugin, e);
+    }
+  });
+  return results.length ? results : [defaultReturn];
+}
+async function apiRunnerAsync(api, args, defaultReturn, argTransform) {
+  if (!apis[api]) {
+    console.log(`This API doesn't exist`, api);
+  }
+  const results = [];
+  for (const plugin of plugins) {
+    const apiFn = plugin.plugin[api];
+    if (!apiFn) {
+      continue;
+    }
+    try {
+      const result = await apiFn(args, plugin.options);
+      if (result && argTransform) {
+        args = argTransform({
+          args,
+          result
+        });
+      }
+
+      // This if case keeps behaviour as before, we should allow undefined here as the api is defined
+      // TODO V4
+      if (typeof result !== `undefined`) {
+        results.push(result);
+      }
+    } catch (e) {
+      augmentErrorWithPlugin(plugin, e);
+    }
+  }
+  return results.length ? results : [defaultReturn];
+}
+
+/***/ }),
+
+/***/ "./.cache/api-ssr-docs.js":
+/*!********************************!*\
+  !*** ./.cache/api-ssr-docs.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+/**
+ * Object containing options defined in `gatsby-config.js`
+ * @typedef {object} pluginOptions
+ */
+
+/**
+ * Replace the default server renderer. This is useful for integration with
+ * Redux, css-in-js libraries, etc. that need custom setups for server
+ * rendering.
+ * @param {object} $0
+ * @param {string} $0.pathname The pathname of the page currently being rendered.
+ * @param {ReactNode} $0.bodyComponent The React element to be rendered as the page body
+ * @param {function} $0.replaceBodyHTMLString Call this with the HTML string
+ * you render. **WARNING** if multiple plugins implement this API it's the
+ * last plugin that "wins". TODO implement an automated warning against this.
+ * @param {function} $0.setHeadComponents Takes an array of components as its
+ * first argument which are added to the `headComponents` array which is passed
+ * to the `html.js` component.
+ * @param {function} $0.setHtmlAttributes Takes an object of props which will
+ * spread into the `<html>` component.
+ * @param {function} $0.setBodyAttributes Takes an object of props which will
+ * spread into the `<body>` component.
+ * @param {function} $0.setPreBodyComponents Takes an array of components as its
+ * first argument which are added to the `preBodyComponents` array which is passed
+ * to the `html.js` component.
+ * @param {function} $0.setPostBodyComponents Takes an array of components as its
+ * first argument which are added to the `postBodyComponents` array which is passed
+ * to the `html.js` component.
+ * @param {function} $0.setBodyProps Takes an object of data which
+ * is merged with other body props and passed to `html.js` as `bodyProps`.
+ * @param {pluginOptions} pluginOptions
+ * @returns {void | Promise<void>}
+ * @example
+ * // From gatsby-plugin-glamor
+ * const { renderToString } = require("react-dom/server")
+ * const inline = require("glamor-inline")
+ *
+ * exports.replaceRenderer = ({ bodyComponent, replaceBodyHTMLString }) => {
+ *   const bodyHTML = renderToString(bodyComponent)
+ *   const inlinedHTML = inline(bodyHTML)
+ *
+ *   replaceBodyHTMLString(inlinedHTML)
+ * }
+ */
+exports.replaceRenderer = true;
+
+/**
+ * Called after every page Gatsby server renders while building HTML so you can
+ * set head and body components to be rendered in your `html.js`.
+ *
+ * Gatsby does a two-pass render for HTML. It loops through your pages first
+ * rendering only the body and then takes the result body HTML string and
+ * passes it as the `body` prop to your `html.js` to complete the render.
+ *
+ * It's often handy to be able to send custom components to your `html.js`.
+ * For example, it's a very common pattern for React.js libraries that
+ * support server rendering to pull out data generated during the render to
+ * add to your HTML.
+ *
+ * Using this API over [`replaceRenderer`](#replaceRenderer) is preferable as
+ * multiple plugins can implement this API where only one plugin can take
+ * over server rendering. However, if your plugin requires taking over server
+ * rendering then that's the one to
+ * use
+ * @param {object} $0
+ * @param {string} $0.pathname The pathname of the page currently being rendered.
+ * @param {function} $0.setHeadComponents Takes an array of components as its
+ * first argument which are added to the `headComponents` array which is passed
+ * to the `html.js` component.
+ * @param {function} $0.setHtmlAttributes Takes an object of props which will
+ * spread into the `<html>` component.
+ * @param {function} $0.setBodyAttributes Takes an object of props which will
+ * spread into the `<body>` component.
+ * @param {function} $0.setPreBodyComponents Takes an array of components as its
+ * first argument which are added to the `preBodyComponents` array which is passed
+ * to the `html.js` component.
+ * @param {function} $0.setPostBodyComponents Takes an array of components as its
+ * first argument which are added to the `postBodyComponents` array which is passed
+ * to the `html.js` component.
+ * @param {function} $0.setBodyProps Takes an object of data which
+ * is merged with other body props and passed to `html.js` as `bodyProps`.
+ * @param {pluginOptions} pluginOptions
+ * @example
+ * // Import React so that you can use JSX in HeadComponents
+ * const React = require("react")
+ *
+ * const HtmlAttributes = {
+ *   lang: "en"
+ * }
+ *
+ * const HeadComponents = [
+ *   <script key="my-script" src="https://gatsby.dev/my-script" />
+ * ]
+ *
+ * const BodyAttributes = {
+ *   "data-theme": "dark"
+ * }
+ *
+ * exports.onRenderBody = ({
+ *   setHeadComponents,
+ *   setHtmlAttributes,
+ *   setBodyAttributes
+ * }, pluginOptions) => {
+ *   setHtmlAttributes(HtmlAttributes)
+ *   setHeadComponents(HeadComponents)
+ *   setBodyAttributes(BodyAttributes)
+ * }
+ */
+exports.onRenderBody = true;
+
+/**
+ * Called after every page Gatsby server renders while building HTML so you can
+ * replace head components to be rendered in your `html.js`. This is useful if
+ * you need to reorder scripts or styles added by other plugins.
+ * @param {object} $0
+ * @param {string} $0.pathname The pathname of the page currently being rendered.
+ * @param {Array<ReactNode>} $0.getHeadComponents Returns the current `headComponents` array.
+ * @param {function} $0.replaceHeadComponents Takes an array of components as its
+ * first argument which replace the `headComponents` array which is passed
+ * to the `html.js` component. **WARNING** if multiple plugins implement this
+ * API it's the last plugin that "wins".
+ * @param {Array<ReactNode>} $0.getPreBodyComponents Returns the current `preBodyComponents` array.
+ *  @param {function} $0.replacePreBodyComponents Takes an array of components as its
+ * first argument which replace the `preBodyComponents` array which is passed
+ * to the `html.js` component. **WARNING** if multiple plugins implement this
+ * API it's the last plugin that "wins".
+ * @param {Array<ReactNode>} $0.getPostBodyComponents Returns the current `postBodyComponents` array.
+ *  @param {function} $0.replacePostBodyComponents Takes an array of components as its
+ * first argument which replace the `postBodyComponents` array which is passed
+ * to the `html.js` component. **WARNING** if multiple plugins implement this
+ * API it's the last plugin that "wins".
+ * @param {pluginOptions} pluginOptions
+ * @example
+ * // Move Typography.js styles to the top of the head section so they're loaded first.
+ * exports.onPreRenderHTML = ({ getHeadComponents, replaceHeadComponents }) => {
+ *   const headComponents = getHeadComponents()
+ *   headComponents.sort((x, y) => {
+ *     if (x.key === 'TypographyStyle') {
+ *       return -1
+ *     } else if (y.key === 'TypographyStyle') {
+ *       return 1
+ *     }
+ *     return 0
+ *   })
+ *   replaceHeadComponents(headComponents)
+ * }
+ */
+exports.onPreRenderHTML = true;
+
+/**
+ * Allow a plugin to wrap the page element.
+ *
+ * This is useful for setting wrapper components around pages that won't get
+ * unmounted on page changes. For setting context providers, use [wrapRootElement](#wrapRootElement).
+ *
+ * _Note:_
+ * There is an equivalent hook in Gatsby's [Browser API](/docs/browser-apis/#wrapPageElement).
+ * It is recommended to use both APIs together.
+ * For example usage, check out [Using i18n](https://github.com/gatsbyjs/gatsby/tree/master/examples/using-i18n).
+ * @param {object} $0
+ * @param {ReactNode} $0.element The "Page" React Element built by Gatsby.
+ * @param {object} $0.props Props object used by page.
+ * @param {pluginOptions} pluginOptions
+ * @returns {ReactNode} Wrapped element
+ * @example
+ * const React = require("react")
+ * const Layout = require("./src/components/layout").default
+ *
+ * exports.wrapPageElement = ({ element, props }) => {
+ *   // props provide same data to Layout as Page element will get
+ *   // including location, data, etc - you don't need to pass it
+ *   return <Layout {...props}>{element}</Layout>
+ * }
+ */
+exports.wrapPageElement = true;
+
+/**
+ * Allow a plugin to wrap the root element.
+ *
+ * This is useful to set up any context providers that will wrap your application.
+ * For setting persistent UI elements around pages use [wrapPageElement](#wrapPageElement).
+ *
+ * _Note:_
+ * There is an equivalent hook in Gatsby's [Browser API](/docs/browser-apis/#wrapRootElement).
+ * It is recommended to use both APIs together.
+ * For example usage, check out [Using redux](https://github.com/gatsbyjs/gatsby/tree/master/examples/using-redux).
+ * @param {object} $0
+ * @param {string} $0.pathname The pathname of the page currently being rendered.
+ * @param {ReactNode} $0.element The "Root" React Element built by Gatsby.
+ * @param {pluginOptions} pluginOptions
+ * @returns {ReactNode} Wrapped element
+ * @example
+ * const React = require("react")
+ * const { Provider } = require("react-redux")
+ *
+ * const createStore = require("./src/state/createStore")
+ * const store = createStore()
+ *
+ * exports.wrapRootElement = ({ element }) => {
+ *   return (
+ *     <Provider store={store}>
+ *       {element}
+ *     </Provider>
+ *   )
+ * }
+ */
+exports.wrapRootElement = true;
+
+/***/ }),
+
+/***/ "./.cache/default-html.js":
+/*!********************************!*\
+  !*** ./.cache/default-html.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ HTML)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function HTML(props) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("html", props.htmlAttributes, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("head", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("meta", {
+    charSet: "utf-8"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("meta", {
+    httpEquiv: "x-ua-compatible",
+    content: "ie=edge"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("meta", {
+    name: "viewport",
+    content: "width=device-width, initial-scale=1, shrink-to-fit=no"
+  }), props.headComponents), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("body", props.bodyAttributes, props.preBodyComponents, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    key: `body`,
+    id: "___gatsby",
+    dangerouslySetInnerHTML: {
+      __html: props.body
+    }
+  }), props.postBodyComponents));
+}
+HTML.propTypes = {
+  htmlAttributes: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().object),
+  headComponents: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().array),
+  bodyAttributes: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().object),
+  preBodyComponents: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().array),
+  body: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().string),
+  postBodyComponents: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().array)
+};
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/interopRequireDefault.js ***!
+  \**********************************************************************/
+/***/ ((module) => {
+
+function _interopRequireDefault(e) {
+  return e && e.__esModule ? e : {
+    "default": e
+  };
+}
+module.exports = _interopRequireDefault, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "./node_modules/@builder.io/partytown/integration/index.cjs":
+/*!******************************************************************!*\
+  !*** ./node_modules/@builder.io/partytown/integration/index.cjs ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+const PartytownSnippet = "/* Partytown 0.7.5 - MIT builder.io */\n!function(t,e,n,i,r,o,a,d,s,c,p,l){function u(){l||(l=1,\"/\"==(a=(o.lib||\"/~partytown/\")+(o.debug?\"debug/\":\"\"))[0]&&(s=e.querySelectorAll('script[type=\"text/partytown\"]'),i!=t?i.dispatchEvent(new CustomEvent(\"pt1\",{detail:t})):(d=setTimeout(f,1e4),e.addEventListener(\"pt0\",w),r?h(1):n.serviceWorker?n.serviceWorker.register(a+(o.swPath||\"partytown-sw.js\"),{scope:a}).then((function(t){t.active?h():t.installing&&t.installing.addEventListener(\"statechange\",(function(t){\"activated\"==t.target.state&&h()}))}),console.error):f())))}function h(t){c=e.createElement(t?\"script\":\"iframe\"),t||(c.setAttribute(\"style\",\"display:block;width:0;height:0;border:0;visibility:hidden\"),c.setAttribute(\"aria-hidden\",!0)),c.src=a+\"partytown-\"+(t?\"atomics.js?v=0.7.5\":\"sandbox-sw.html?\"+Date.now()),e.body.appendChild(c)}function f(n,r){for(w(),i==t&&(o.forward||[]).map((function(e){delete t[e.split(\".\")[0]]})),n=0;n<s.length;n++)(r=e.createElement(\"script\")).innerHTML=s[n].innerHTML,e.head.appendChild(r);c&&c.parentNode.removeChild(c)}function w(){clearTimeout(d)}o=t.partytown||{},i==t&&(o.forward||[]).map((function(e){p=t,e.split(\".\").map((function(e,n,i){p=p[i[n]]=n+1<i.length?\"push\"==i[n+1]?[]:p[i[n]]||{}:function(){(t._ptf=t._ptf||[]).push(i,arguments)}}))})),\"complete\"==e.readyState?u():(t.addEventListener(\"DOMContentLoaded\",u),t.addEventListener(\"load\",u))}(window,document,navigator,top,window.crossOriginIsolated);";
+
+const createSnippet = (config, snippetCode) => {
+    const { forward = [], ...filteredConfig } = config || {};
+    const configStr = JSON.stringify(filteredConfig, (k, v) => {
+        if (typeof v === 'function') {
+            v = String(v);
+            if (v.startsWith(k + '(')) {
+                v = 'function ' + v;
+            }
+        }
+        return v;
+    });
+    return [
+        `!(function(w,p,f,c){`,
+        Object.keys(filteredConfig).length > 0
+            ? `c=w[p]=Object.assign(w[p]||{},${configStr});`
+            : `c=w[p]=w[p]||{};`,
+        `c[f]=(c[f]||[])`,
+        forward.length > 0 ? `.concat(${JSON.stringify(forward)})` : ``,
+        `})(window,'partytown','forward');`,
+        snippetCode,
+    ].join('');
+};
+
+/**
+ * The `type` attribute for Partytown scripts, which does two things:
+ *
+ * 1. Prevents the `<script>` from executing on the main thread.
+ * 2. Is used as a selector so the Partytown library can find all scripts to execute in a web worker.
+ *
+ * @public
+ */
+const SCRIPT_TYPE = `text/partytown`;
+
+/**
+ * Function that returns the Partytown snippet as a string, which can be
+ * used as the innerHTML of the inlined Partytown script in the head.
+ *
+ * @public
+ */
+const partytownSnippet = (config) => createSnippet(config, PartytownSnippet);
+
+exports.SCRIPT_TYPE = SCRIPT_TYPE;
+exports.partytownSnippet = partytownSnippet;
+
+
+/***/ }),
+
+/***/ "./node_modules/@gatsbyjs/reach-router/dist/index.modern.mjs":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@gatsbyjs/reach-router/dist/index.modern.mjs ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+var react__WEBPACK_IMPORTED_MODULE_0___namespace_cache;
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BaseContext: () => (/* binding */ m),
+/* harmony export */   Link: () => (/* binding */ A),
+/* harmony export */   Location: () => (/* binding */ G),
+/* harmony export */   LocationContext: () => (/* binding */ d),
+/* harmony export */   LocationProvider: () => (/* binding */ z),
+/* harmony export */   Match: () => (/* binding */ Q),
+/* harmony export */   Redirect: () => (/* binding */ R),
+/* harmony export */   Router: () => (/* binding */ oe),
+/* harmony export */   ServerLocation: () => (/* binding */ J),
+/* harmony export */   createHistory: () => (/* binding */ i),
+/* harmony export */   createMemorySource: () => (/* binding */ c),
+/* harmony export */   globalHistory: () => (/* binding */ l),
+/* harmony export */   insertParams: () => (/* binding */ P),
+/* harmony export */   isRedirect: () => (/* binding */ g),
+/* harmony export */   match: () => (/* binding */ x),
+/* harmony export */   navigate: () => (/* binding */ p),
+/* harmony export */   pick: () => (/* binding */ w),
+/* harmony export */   redirectTo: () => (/* binding */ v),
+/* harmony export */   resolve: () => (/* binding */ k),
+/* harmony export */   shallowCompare: () => (/* binding */ D),
+/* harmony export */   startsWith: () => (/* binding */ C),
+/* harmony export */   useBaseContext: () => (/* binding */ f),
+/* harmony export */   useLocation: () => (/* binding */ se),
+/* harmony export */   useLocationContext: () => (/* binding */ y),
+/* harmony export */   useMatch: () => (/* binding */ ue),
+/* harmony export */   useNavigate: () => (/* binding */ ie),
+/* harmony export */   useParams: () => (/* binding */ ce),
+/* harmony export */   validateRedirect: () => (/* binding */ T)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var invariant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! invariant */ "./node_modules/invariant/invariant.js");
+function o(){return o=Object.assign?Object.assign.bind():function(e){for(var t=1;t<arguments.length;t++){var r=arguments[t];for(var n in r)Object.prototype.hasOwnProperty.call(r,n)&&(e[n]=r[n])}return e},o.apply(this,arguments)}function a(e,t){if(null==e)return{};var r,n,o={},a=Object.keys(e);for(n=0;n<a.length;n++)t.indexOf(r=a[n])>=0||(o[r]=e[r]);return o}const s=e=>{const{search:t,hash:r,href:n,origin:o,protocol:a,host:s,hostname:i,port:c}=e.location;let{pathname:l}=e.location;return!l&&n&&u&&(l=new URL(n).pathname),{pathname:encodeURI(decodeURI(l)),search:t,hash:r,href:n,origin:o,protocol:a,host:s,hostname:i,port:c,state:e.history.state,key:e.history.state&&e.history.state.key||"initial"}},i=(e,t)=>{let r=[],n=s(e),a=!1,i=()=>{};return{get location(){return n},get transitioning(){return a},_onTransitionComplete(){a=!1,i()},listen(t){r.push(t);const o=()=>{n=s(e),t({location:n,action:"POP"})};return e.addEventListener("popstate",o),()=>{e.removeEventListener("popstate",o),r=r.filter(e=>e!==t)}},navigate(t,{state:c,replace:u=!1}={}){if("number"==typeof t)e.history.go(t);else{c=o({},c,{key:Date.now()+""});try{a||u?e.history.replaceState(c,null,t):e.history.pushState(c,null,t)}catch(r){e.location[u?"replace":"assign"](t)}}n=s(e),a=!0;const l=new Promise(e=>i=e);return r.forEach(e=>e({location:n,action:"PUSH"})),l}}},c=(e="/")=>{const t=e.indexOf("?"),r={pathname:t>-1?e.substr(0,t):e,search:t>-1?e.substr(t):""};let n=0;const o=[r],a=[null];return{get location(){return o[n]},addEventListener(e,t){},removeEventListener(e,t){},history:{get entries(){return o},get index(){return n},get state(){return a[n]},pushState(e,t,r){const[s,i=""]=r.split("?");n++,o.push({pathname:s,search:i.length?`?${i}`:i}),a.push(e)},replaceState(e,t,r){const[s,i=""]=r.split("?");o[n]={pathname:s,search:i},a[n]=e},go(e){const t=n+e;t<0||t>a.length-1||(n=t)}}}},u=!("undefined"==typeof window||!window.document||!window.document.createElement),l=i(u?window:c()),{navigate:p}=l;function h(e,r){return react__WEBPACK_IMPORTED_MODULE_0__.createServerContext?((e,r=null)=>(globalThis.__SERVER_CONTEXT||(globalThis.__SERVER_CONTEXT={}),globalThis.__SERVER_CONTEXT[e]||(globalThis.__SERVER_CONTEXT[e]=react__WEBPACK_IMPORTED_MODULE_0__.createServerContext(e,r)),globalThis.__SERVER_CONTEXT[e]))(e,r):react__WEBPACK_IMPORTED_MODULE_0__.createContext(r)}const m=h("Base",{baseuri:"/",basepath:"/"}),d=h("Location"),f=()=>react__WEBPACK_IMPORTED_MODULE_0__.useContext(m),y=()=>react__WEBPACK_IMPORTED_MODULE_0__.useContext(d);function E(e){this.uri=e}const g=e=>e instanceof E,v=e=>{throw new E(e)};function b(t){const{to:r,replace:n=!0,state:o,noThrow:a,baseuri:s}=t;react__WEBPACK_IMPORTED_MODULE_0__.useEffect(()=>{Promise.resolve().then(()=>{const e=k(r,s);p(P(e,t),{replace:n,state:o})})},[]);const i=k(r,s);return a||v(P(i,t)),null}const R=t=>{const r=y(),{baseuri:n}=f();/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(b,o({},r,{baseuri:n},t))};R.propTypes={from:prop_types__WEBPACK_IMPORTED_MODULE_2__.string,to:prop_types__WEBPACK_IMPORTED_MODULE_2__.string.isRequired};const C=(e,t)=>e.substr(0,t.length)===t,w=(e,t)=>{let r,o;const[a]=t.split("?"),s=N(a),i=""===s[0],c=j(e);for(let e=0,a=c.length;e<a;e++){let a=!1;const u=c[e].route;if(u.default){o={route:u,params:{},uri:t};continue}const l=N(u.path),p={},h=Math.max(s.length,l.length);let m=0;for(;m<h;m++){const e=l[m],t=s[m];if($(e)){p[e.slice(1)||"*"]=s.slice(m).map(decodeURIComponent).join("/");break}if(void 0===t){a=!0;break}const r=O.exec(e);if(r&&!i){const e=-1===U.indexOf(r[1]);invariant__WEBPACK_IMPORTED_MODULE_1__(e,`<Router> dynamic segment "${r[1]}" is a reserved name. Please use a different name in path "${u.path}".`);const o=decodeURIComponent(t);p[r[1]]=o}else if(e!==t){a=!0;break}}if(!a){r={route:u,params:p,uri:"/"+s.slice(0,m).join("/")};break}}return r||o||null},x=(e,t)=>w([{path:e}],t),k=(e,t)=>{if(C(e,"/"))return e;const[r,n]=e.split("?"),[o]=t.split("?"),a=N(r),s=N(o);if(""===a[0])return L(o,n);if(!C(a[0],".")){const e=s.concat(a).join("/");return L(("/"===o?"":"/")+e,n)}const i=s.concat(a),c=[];for(let e=0,t=i.length;e<t;e++){const t=i[e];".."===t?c.pop():"."!==t&&c.push(t)}return L("/"+c.join("/"),n)},P=(e,t)=>{const[r,n=""]=e.split("?");let o="/"+N(r).map(e=>{const r=O.exec(e);return r?t[r[1]]:e}).join("/");const{location:{search:a=""}={}}=t,s=a.split("?")[1]||"";return o=L(o,n,s),o},T=(e,t)=>{const r=e=>_(e);return N(e).filter(r).sort().join("/")===N(t).filter(r).sort().join("/")},O=/^:(.+)/,_=e=>O.test(e),$=e=>e&&"*"===e[0],S=(e,t)=>({route:e,score:e.default?0:N(e.path).reduce((e,t)=>(e+=4,(e=>""===e)(t)?e+=1:_(t)?e+=2:$(t)?e-=5:e+=3,e),0),index:t}),j=e=>e.map(S).sort((e,t)=>e.score<t.score?1:e.score>t.score?-1:e.index-t.index),N=e=>e.replace(/(^\/+|\/+$)/g,"").split("/"),L=(e,...t)=>e+((t=t.filter(e=>e&&e.length>0))&&t.length>0?`?${t.join("&")}`:""),U=["uri","path"],D=(e,t)=>{const r=Object.keys(e);return r.length===Object.keys(t).length&&r.every(r=>t.hasOwnProperty(r)&&e[r]===t[r])},M=e=>e.replace(/(^\/+|\/+$)/g,""),I=t=>r=>{if(!r)return null;if(r.type===react__WEBPACK_IMPORTED_MODULE_0__.Fragment&&r.props.children)return react__WEBPACK_IMPORTED_MODULE_0__.Children.map(r.props.children,I(t));if(invariant__WEBPACK_IMPORTED_MODULE_1__(r.props.path||r.props.default||r.type===R,`<Router>: Children of <Router> must have a \`path\` or \`default\` prop, or be a \`<Redirect>\`. None found on element type \`${r.type}\``),invariant__WEBPACK_IMPORTED_MODULE_1__(!!(r.type!==R||r.props.from&&r.props.to),`<Redirect from="${r.props.from}" to="${r.props.to}"/> requires both "from" and "to" props when inside a <Router>.`),invariant__WEBPACK_IMPORTED_MODULE_1__(!(r.type===R&&!T(r.props.from,r.props.to)),`<Redirect from="${r.props.from} to="${r.props.to}"/> has mismatched dynamic segments, ensure both paths have the exact same dynamic segments.`),r.props.default)return{value:r,default:!0};const o=r.type===R?r.props.from:r.props.path,a="/"===o?t:`${M(t)}/${M(o)}`;return{value:r,default:r.props.default,path:r.props.children?`${M(a)}/*`:a}},V=["innerRef"],q=["to","state","replace","getProps"],X=["key"];let{forwardRef:B}=/*#__PURE__*/ (react__WEBPACK_IMPORTED_MODULE_0___namespace_cache || (react__WEBPACK_IMPORTED_MODULE_0___namespace_cache = __webpack_require__.t(react__WEBPACK_IMPORTED_MODULE_0__, 2)));void 0===B&&(B=e=>e);const K=()=>{},A=B((t,r)=>{let{innerRef:n}=t,s=a(t,V);const{baseuri:i}=f(),{location:c}=y(),{to:u,state:l,replace:h,getProps:m=K}=s,d=a(s,q),E=k(u,i),g=encodeURI(E),v=c.pathname===g,b=C(c.pathname,g);/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement("a",o({ref:r||n,"aria-current":v?"page":void 0},d,m({isCurrent:v,isPartiallyCurrent:b,href:E,location:c}),{href:E,onClick:e=>{if(d.onClick&&d.onClick(e),(e=>!e.defaultPrevented&&0===e.button&&!(e.metaKey||e.altKey||e.ctrlKey||e.shiftKey))(e)){e.preventDefault();let t=h;if("boolean"!=typeof h&&v){const e=a(o({},c.state),X);t=D(o({},l),e)}p(E,{state:l,replace:t})}}}))});A.displayName="Link",A.propTypes={to:prop_types__WEBPACK_IMPORTED_MODULE_2__.string.isRequired};class F extends react__WEBPACK_IMPORTED_MODULE_0__.Component{constructor(...e){super(...e),this.displayName="ReactUseErrorBoundary"}componentDidCatch(...e){this.setState({}),this.props.onError(...e)}render(){return this.props.children}}const W=react__WEBPACK_IMPORTED_MODULE_0__.createContext({componentDidCatch:{current:void 0},error:void 0,setError:()=>!1});function H({children:t}){const[r,n]=react__WEBPACK_IMPORTED_MODULE_0__.useState(),o=react__WEBPACK_IMPORTED_MODULE_0__.useRef(),a=react__WEBPACK_IMPORTED_MODULE_0__.useMemo(()=>({componentDidCatch:o,error:r,setError:n}),[r]);/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(W.Provider,{value:a},/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(F,{error:r,onError:(e,t)=>{n(e),null==o.current||o.current(e,t)}},t))}H.displayName="ReactUseErrorBoundaryContext";const z=function(t){var r,n;function a(r){/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(H,null,/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(t,o({key:"WrappedComponent"},r)))}return a.displayName=`WithErrorBoundary(${null!=(r=null!=(n=t.displayName)?n:t.name)?r:"Component"})`,a}(({history:t=l,children:r})=>{const{location:n}=t,[o,a]=react__WEBPACK_IMPORTED_MODULE_0__.useState({location:n}),[s]=function(t){const r=react__WEBPACK_IMPORTED_MODULE_0__.useContext(W);r.componentDidCatch.current=void 0;const n=react__WEBPACK_IMPORTED_MODULE_0__.useCallback(()=>{r.setError(void 0)},[]);return[r.error,n]}();if(react__WEBPACK_IMPORTED_MODULE_0__.useEffect(()=>{t._onTransitionComplete()},[o.location]),react__WEBPACK_IMPORTED_MODULE_0__.useEffect(()=>{let e=!1;const r=t.listen(({location:t})=>{Promise.resolve().then(()=>{requestAnimationFrame(()=>{e||a({location:t})})})});return()=>{e=!0,r()}},[]),s){if(!g(s))throw s;p(s.uri,{replace:!0})}/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(d.Provider,{value:o},"function"==typeof r?r(o):r||null)}),G=({children:t})=>{const r=y();return r?t(r):/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(z,null,t)},J=({url:t,children:r})=>{const n=t.indexOf("?");let o,a="";return n>-1?(o=t.substring(0,n),a=t.substring(n)):o=t,/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(d.Provider,{value:{location:{pathname:o,search:a,hash:""}}},r)},Q=({path:e,children:t})=>{const{baseuri:r}=f(),{location:n}=y(),a=k(e,r),s=x(a,n.pathname);return t({location:n,match:s?o({},s.params,{uri:s.uri,path:e}):null})},Y=["uri","location","component"],Z=["children","style","component","uri","location"],ee=t=>{let{uri:r,location:n,component:s}=t,i=a(t,Y);/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(re,o({},i,{component:s,uri:r,location:n}))};let te=0;const re=t=>{let{children:r,style:n,component:s="div",uri:i,location:c}=t,u=a(t,Z);const l=react__WEBPACK_IMPORTED_MODULE_0__.useRef(),p=react__WEBPACK_IMPORTED_MODULE_0__.useRef(!0),h=react__WEBPACK_IMPORTED_MODULE_0__.useRef(i),m=react__WEBPACK_IMPORTED_MODULE_0__.useRef(c.pathname),d=react__WEBPACK_IMPORTED_MODULE_0__.useRef(!1);react__WEBPACK_IMPORTED_MODULE_0__.useEffect(()=>(te++,f(),()=>{te--,0===te&&(p.current=!0)}),[]),react__WEBPACK_IMPORTED_MODULE_0__.useEffect(()=>{let e=!1,t=!1;i!==h.current&&(h.current=i,e=!0),c.pathname!==m.current&&(m.current=c.pathname,t=!0),d.current=e||t&&c.pathname===i,d.current&&f()},[i,c]);const f=react__WEBPACK_IMPORTED_MODULE_0__.useCallback(()=>{var e; true&&(p.current?p.current=!1:(e=l.current,d.current&&e&&e.focus()))},[]);/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(s,o({style:o({outline:"none"},n),tabIndex:"-1",ref:l},u),r)},ne=["location","primary","children","basepath","baseuri","component"],oe=t=>{const r=f(),n=y();/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(ae,o({},r,n,t))};function ae(t){const{location:r,primary:n=!0,children:s,basepath:i,component:c="div"}=t,u=a(t,ne),l=react__WEBPACK_IMPORTED_MODULE_0__.Children.toArray(s).reduce((e,t)=>{const r=I(i)(t);return e.concat(r)},[]),{pathname:p}=r,h=w(l,p);if(h){const{params:t,uri:a,route:s,route:{value:l}}=h,p=s.default?i:s.path.replace(/\*$/,""),d=o({},t,{uri:a,location:r}),f=react__WEBPACK_IMPORTED_MODULE_0__.cloneElement(l,d,l.props.children?/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(oe,{location:r,primary:n},l.props.children):void 0),y=n?ee:c,E=n?o({uri:a,location:r,component:c},u):u;/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(m.Provider,{value:{baseuri:a,basepath:p}},/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(y,E,f))}return null}const se=()=>{const e=y();if(!e)throw new Error("useLocation hook was used but a LocationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router");return e.location},ie=()=>{throw new Error("useNavigate is removed. Use import { navigate } from 'gatsby' instead")},ce=()=>{const e=f();if(!e)throw new Error("useParams hook was used but a LocationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router");const t=se(),r=x(e.basepath,t.pathname);return r?r.params:null},ue=e=>{if(!e)throw new Error("useMatch(path: string) requires an argument of a string to match against");const t=f();if(!t)throw new Error("useMatch hook was used but a LocationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router");const r=se(),n=k(e,t.baseuri),a=x(n,r.pathname);return a?o({},a.params,{uri:a.uri,path:e}):null};
+//# sourceMappingURL=index.modern.mjs.map
+
+
+/***/ }),
+
 /***/ "./node_modules/common-tags/es/TemplateTag/TemplateTag.js":
 /*!****************************************************************!*\
   !*** ./node_modules/common-tags/es/TemplateTag/TemplateTag.js ***!
@@ -1439,6 +1956,81 @@ var trimResultTransformer = function trimResultTransformer() {
 
 /***/ }),
 
+/***/ "./node_modules/gatsby-plugin-image/gatsby-ssr.js":
+/*!********************************************************!*\
+  !*** ./node_modules/gatsby-plugin-image/gatsby-ssr.js ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+var React = __webpack_require__(/*! react */ "react");
+var commonTags = __webpack_require__(/*! common-tags */ "./node_modules/common-tags/es/index.js");
+function _interopNamespace(e) {
+  if (e && e.__esModule) return e;
+  var n = Object.create(null);
+  if (e) {
+    Object.keys(e).forEach(function (k) {
+      if (k !== 'default') {
+        var d = Object.getOwnPropertyDescriptor(e, k);
+        Object.defineProperty(n, k, d.get ? d : {
+          enumerable: true,
+          get: function () {
+            return e[k];
+          }
+        });
+      }
+    });
+  }
+  n["default"] = e;
+  return n;
+}
+var React__namespace = /*#__PURE__*/_interopNamespace(React);
+var generateHtml = function generateHtml(str) {
+  return {
+    __html: commonTags.oneLine(str)
+  };
+};
+function onRenderBody(_ref) {
+  var setHeadComponents = _ref.setHeadComponents;
+  setHeadComponents([React__namespace.createElement("style", {
+    key: "gatsby-image-style",
+    dangerouslySetInnerHTML: generateHtml(".gatsby-image-wrapper{position:relative;overflow:hidden}.gatsby-image-wrapper picture.object-fit-polyfill{position:static!important}.gatsby-image-wrapper img{bottom:0;height:100%;left:0;margin:0;max-width:none;padding:0;position:absolute;right:0;top:0;width:100%;object-fit:cover}.gatsby-image-wrapper [data-main-image]{opacity:0;transform:translateZ(0);transition:opacity .25s linear;will-change:opacity}.gatsby-image-wrapper-constrained{display:inline-block;vertical-align:top}")
+  }), React__namespace.createElement("noscript", {
+    key: "gatsby-image-style-noscript",
+    dangerouslySetInnerHTML: generateHtml("<style>" + ".gatsby-image-wrapper noscript [data-main-image]{opacity:1!important}.gatsby-image-wrapper [data-placeholder-image]{opacity:0!important}" + "</style>")
+  }), React__namespace.createElement("script", {
+    key: "gatsby-image-style-script",
+    type: "module",
+    dangerouslySetInnerHTML: generateHtml("const e=\"undefined\"!=typeof HTMLImageElement&&\"loading\"in HTMLImageElement.prototype;e&&document.body.addEventListener(\"load\",(function(e){const t=e.target;if(void 0===t.dataset.mainImage)return;if(void 0===t.dataset.gatsbyImageSsr)return;let a=null,n=t;for(;null===a&&n;)void 0!==n.parentNode.dataset.gatsbyImageWrapper&&(a=n.parentNode),n=n.parentNode;const o=a.querySelector(\"[data-placeholder-image]\"),r=new Image;r.src=t.currentSrc,r.decode().catch((()=>{})).then((()=>{t.style.opacity=1,o&&(o.style.opacity=0,o.style.transition=\"opacity 500ms linear\")}))}),!0);")
+  })]);
+}
+exports.onRenderBody = onRenderBody;
+
+/***/ }),
+
+/***/ "./node_modules/gatsby-script/dist/index.modern.mjs":
+/*!**********************************************************!*\
+  !*** ./node_modules/gatsby-script/dist/index.modern.mjs ***!
+  \**********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Script: () => (/* binding */ f),
+/* harmony export */   ScriptStrategy: () => (/* binding */ c),
+/* harmony export */   collectedScriptsByPage: () => (/* binding */ l),
+/* harmony export */   scriptCache: () => (/* binding */ u),
+/* harmony export */   scriptCallbackCache: () => (/* binding */ d)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var _gatsbyjs_reach_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @gatsbyjs/reach-router */ "./node_modules/@gatsbyjs/reach-router/dist/index.modern.mjs");
+"use client"
+;function o(){return o=Object.assign?Object.assign.bind():function(t){for(var e=1;e<arguments.length;e++){var n=arguments[e];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(t[r]=n[r])}return t},o.apply(this,arguments)}const a=new Map,l={get:t=>a.get(t)||[],set(t,e){const n=a.get(t)||[];n.push(e),a.set(t,n)},delete(t){a.delete(t)}},s="undefined"!=typeof self&&self.requestIdleCallback&&self.requestIdleCallback.bind(window)||function(t){const e=Date.now();return setTimeout(function(){t({didTimeout:!1,timeRemaining:function(){return Math.max(0,50-(Date.now()-e))}})},1)};var c;!function(t){t.postHydrate="post-hydrate",t.idle="idle",t.offMainThread="off-main-thread"}(c||(c={}));const i=new Set(["src","strategy","dangerouslySetInnerHTML","children","onLoad","onError"]),u=new Set,d=new Map;function f(e){/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(_gatsbyjs_reach_router__WEBPACK_IMPORTED_MODULE_1__.Location,null,()=>/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(p,e))}function p(n){const{src:a,strategy:i=c.postHydrate}=n||{},{pathname:u}=(0,_gatsbyjs_reach_router__WEBPACK_IMPORTED_MODULE_1__.useLocation)();if((0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(()=>{let t;switch(i){case c.postHydrate:t=y(n);break;case c.idle:s(()=>{t=y(n)});break;case c.offMainThread:{const t=b(n);l.set(u,t)}}return()=>{const{script:e,loadCallback:n,errorCallback:r}=t||{};n&&(null==e||e.removeEventListener("load",n)),r&&(null==e||e.removeEventListener("error",r)),null==e||e.remove()}},[]),i===c.offMainThread){const e=m(n),r=b(n);return"undefined"==typeof window&&l.set(u,r),/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("script",e?o({type:"text/partytown","data-strategy":i,crossOrigin:"anonymous"},r,{dangerouslySetInnerHTML:{__html:m(n)}}):o({type:"text/partytown",src:h(a),"data-strategy":i,crossOrigin:"anonymous"},r))}return null}function y(t){const{id:e,src:n,strategy:r=c.postHydrate,onLoad:a,onError:l}=t||{},s=e||n,i=["load","error"],f={load:a,error:l};if(s){for(const t of i)if(null!=f&&f[t]){var p;const e=d.get(s)||{},{callbacks:n=[]}=(null==e?void 0:e[t])||{};var y,h;n.push(null==f?void 0:f[t]),null!=e&&null!=(p=e[t])&&p.event?null==f||null==(y=f[t])||y.call(f,null==e||null==(h=e[t])?void 0:h.event):d.set(s,o({},e,{[t]:{callbacks:n}}))}if(u.has(s))return null}const v=m(t),k=b(t),w=document.createElement("script");e&&(w.id=e),w.dataset.strategy=r;for(const[t,e]of Object.entries(k))w.setAttribute(t,e);v&&(w.textContent=v),n&&(w.src=n);const C={};if(s){for(const t of i){const e=e=>g(e,s,t);w.addEventListener(t,e),C[`${t}Callback`]=e}u.add(s)}return document.body.appendChild(w),{script:w,loadCallback:C.loadCallback,errorCallback:C.errorCallback}}function m(t){const{dangerouslySetInnerHTML:e,children:n=""}=t||{},{__html:r=""}=e||{};return r||n}function b(t){const e={};for(const[n,r]of Object.entries(t))i.has(n)||(e[n]=r);return e}function h(t){if(t)return`/__third-party-proxy?url=${encodeURIComponent(t)}`}function g(t,e,n){const r=d.get(e)||{};for(const e of(null==r||null==(o=r[n])?void 0:o.callbacks)||[]){var o;e(t)}d.set(e,{[n]:{event:t}})}
+//# sourceMappingURL=index.modern.mjs.map
+
+
+/***/ }),
+
 /***/ "./node_modules/gatsby/dist/internal-plugins/bundle-optimisations/polyfills/object-assign.js":
 /*!***************************************************************************************************!*\
   !*** ./node_modules/gatsby/dist/internal-plugins/bundle-optimisations/polyfills/object-assign.js ***!
@@ -1517,451 +2109,6 @@ function getForwards(collectedScripts) {
   return collectedScripts === null || collectedScripts === void 0 ? void 0 : collectedScripts.flatMap(script => (script === null || script === void 0 ? void 0 : script.forward) || []);
 }
 //# sourceMappingURL=get-forwards.js.map
-
-/***/ }),
-
-/***/ "./.cache/_this_is_virtual_fs_path_/$virtual/async-requires.js":
-/*!*********************************************************************!*\
-  !*** ./.cache/_this_is_virtual_fs_path_/$virtual/async-requires.js ***!
-  \*********************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-exports.components = {
-  "component---cache-dev-404-page-js": () => __webpack_require__.e(/*! import() | component---cache-dev-404-page-js */ "component---cache-dev-404-page-js").then(__webpack_require__.bind(__webpack_require__, /*! ./../../dev-404-page.js?export=default */ "./.cache/dev-404-page.js?export=default")),
-  "component---src-pages-404-js": () => __webpack_require__.e(/*! import() | component---src-pages-404-js */ "component---src-pages-404-js").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/404.js?export=default */ "./src/pages/404.js?export=default")),
-  "component---src-pages-about-js": () => __webpack_require__.e(/*! import() | component---src-pages-about-js */ "component---src-pages-about-js").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/about.js?export=default */ "./src/pages/about.js?export=default")),
-  "component---src-pages-blog-js": () => __webpack_require__.e(/*! import() | component---src-pages-blog-js */ "component---src-pages-blog-js").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/blog.js?export=default */ "./src/pages/blog.js?export=default")),
-  "component---src-pages-index-js": () => __webpack_require__.e(/*! import() | component---src-pages-index-js */ "component---src-pages-index-js").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/index.js?export=default */ "./src/pages/index.js?export=default"))
-};
-
-exports.head = {
-  "component---src-pages-404-js": () => __webpack_require__.e(/*! import() | component---src-pages-404-jshead */ "component---src-pages-404-jshead").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/404.js?export=head */ "./src/pages/404.js?export=head")),
-  "component---src-pages-about-js": () => __webpack_require__.e(/*! import() | component---src-pages-about-jshead */ "component---src-pages-about-jshead").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/about.js?export=head */ "./src/pages/about.js?export=head")),
-  "component---src-pages-blog-js": () => __webpack_require__.e(/*! import() | component---src-pages-blog-jshead */ "component---src-pages-blog-jshead").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/blog.js?export=head */ "./src/pages/blog.js?export=head")),
-  "component---src-pages-index-js": () => __webpack_require__.e(/*! import() | component---src-pages-index-jshead */ "component---src-pages-index-jshead").then(__webpack_require__.bind(__webpack_require__, /*! ./../../../src/pages/index.js?export=head */ "./src/pages/index.js?export=head"))
-};
-
-/***/ }),
-
-/***/ "./.cache/api-runner-ssr.js":
-/*!**********************************!*\
-  !*** ./.cache/api-runner-ssr.js ***!
-  \**********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   apiRunner: () => (/* binding */ apiRunner),
-/* harmony export */   apiRunnerAsync: () => (/* binding */ apiRunnerAsync)
-/* harmony export */ });
-var plugins = [{
-  name: 'gatsby-plugin-image',
-  plugin: __webpack_require__(/*! ./node_modules/gatsby-plugin-image/gatsby-ssr.js */ "./node_modules/gatsby-plugin-image/gatsby-ssr.js"),
-  options: {
-    "plugins": []
-  }
-}, {
-  name: 'partytown',
-  plugin: __webpack_require__(/*! ./node_modules/gatsby/dist/internal-plugins/partytown/gatsby-ssr.js */ "./node_modules/gatsby/dist/internal-plugins/partytown/gatsby-ssr.js"),
-  options: {
-    "plugins": []
-  }
-}];
-/* global plugins */
-// During bootstrap, we write requires at top of this file which looks like:
-// var plugins = [
-//   {
-//     plugin: require("/path/to/plugin1/gatsby-ssr.js"),
-//     options: { ... },
-//   },
-//   {
-//     plugin: require("/path/to/plugin2/gatsby-ssr.js"),
-//     options: { ... },
-//   },
-// ]
-
-const apis = __webpack_require__(/*! ./api-ssr-docs */ "./.cache/api-ssr-docs.js");
-function augmentErrorWithPlugin(plugin, err) {
-  if (plugin.name !== `default-site-plugin`) {
-    // default-site-plugin is user code and will print proper stack trace,
-    // so no point in annotating error message pointing out which plugin is root of the problem
-    err.message += ` (from plugin: ${plugin.name})`;
-  }
-  throw err;
-}
-function apiRunner(api, args, defaultReturn, argTransform) {
-  if (!apis[api]) {
-    console.log(`This API doesn't exist`, api);
-  }
-  const results = [];
-  plugins.forEach(plugin => {
-    const apiFn = plugin.plugin[api];
-    if (!apiFn) {
-      return;
-    }
-    try {
-      const result = apiFn(args, plugin.options);
-      if (result && argTransform) {
-        args = argTransform({
-          args,
-          result
-        });
-      }
-
-      // This if case keeps behaviour as before, we should allow undefined here as the api is defined
-      // TODO V4
-      if (typeof result !== `undefined`) {
-        results.push(result);
-      }
-    } catch (e) {
-      augmentErrorWithPlugin(plugin, e);
-    }
-  });
-  return results.length ? results : [defaultReturn];
-}
-async function apiRunnerAsync(api, args, defaultReturn, argTransform) {
-  if (!apis[api]) {
-    console.log(`This API doesn't exist`, api);
-  }
-  const results = [];
-  for (const plugin of plugins) {
-    const apiFn = plugin.plugin[api];
-    if (!apiFn) {
-      continue;
-    }
-    try {
-      const result = await apiFn(args, plugin.options);
-      if (result && argTransform) {
-        args = argTransform({
-          args,
-          result
-        });
-      }
-
-      // This if case keeps behaviour as before, we should allow undefined here as the api is defined
-      // TODO V4
-      if (typeof result !== `undefined`) {
-        results.push(result);
-      }
-    } catch (e) {
-      augmentErrorWithPlugin(plugin, e);
-    }
-  }
-  return results.length ? results : [defaultReturn];
-}
-
-/***/ }),
-
-/***/ "./.cache/api-ssr-docs.js":
-/*!********************************!*\
-  !*** ./.cache/api-ssr-docs.js ***!
-  \********************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-/**
- * Object containing options defined in `gatsby-config.js`
- * @typedef {object} pluginOptions
- */
-
-/**
- * Replace the default server renderer. This is useful for integration with
- * Redux, css-in-js libraries, etc. that need custom setups for server
- * rendering.
- * @param {object} $0
- * @param {string} $0.pathname The pathname of the page currently being rendered.
- * @param {ReactNode} $0.bodyComponent The React element to be rendered as the page body
- * @param {function} $0.replaceBodyHTMLString Call this with the HTML string
- * you render. **WARNING** if multiple plugins implement this API it's the
- * last plugin that "wins". TODO implement an automated warning against this.
- * @param {function} $0.setHeadComponents Takes an array of components as its
- * first argument which are added to the `headComponents` array which is passed
- * to the `html.js` component.
- * @param {function} $0.setHtmlAttributes Takes an object of props which will
- * spread into the `<html>` component.
- * @param {function} $0.setBodyAttributes Takes an object of props which will
- * spread into the `<body>` component.
- * @param {function} $0.setPreBodyComponents Takes an array of components as its
- * first argument which are added to the `preBodyComponents` array which is passed
- * to the `html.js` component.
- * @param {function} $0.setPostBodyComponents Takes an array of components as its
- * first argument which are added to the `postBodyComponents` array which is passed
- * to the `html.js` component.
- * @param {function} $0.setBodyProps Takes an object of data which
- * is merged with other body props and passed to `html.js` as `bodyProps`.
- * @param {pluginOptions} pluginOptions
- * @returns {void | Promise<void>}
- * @example
- * // From gatsby-plugin-glamor
- * const { renderToString } = require("react-dom/server")
- * const inline = require("glamor-inline")
- *
- * exports.replaceRenderer = ({ bodyComponent, replaceBodyHTMLString }) => {
- *   const bodyHTML = renderToString(bodyComponent)
- *   const inlinedHTML = inline(bodyHTML)
- *
- *   replaceBodyHTMLString(inlinedHTML)
- * }
- */
-exports.replaceRenderer = true;
-
-/**
- * Called after every page Gatsby server renders while building HTML so you can
- * set head and body components to be rendered in your `html.js`.
- *
- * Gatsby does a two-pass render for HTML. It loops through your pages first
- * rendering only the body and then takes the result body HTML string and
- * passes it as the `body` prop to your `html.js` to complete the render.
- *
- * It's often handy to be able to send custom components to your `html.js`.
- * For example, it's a very common pattern for React.js libraries that
- * support server rendering to pull out data generated during the render to
- * add to your HTML.
- *
- * Using this API over [`replaceRenderer`](#replaceRenderer) is preferable as
- * multiple plugins can implement this API where only one plugin can take
- * over server rendering. However, if your plugin requires taking over server
- * rendering then that's the one to
- * use
- * @param {object} $0
- * @param {string} $0.pathname The pathname of the page currently being rendered.
- * @param {function} $0.setHeadComponents Takes an array of components as its
- * first argument which are added to the `headComponents` array which is passed
- * to the `html.js` component.
- * @param {function} $0.setHtmlAttributes Takes an object of props which will
- * spread into the `<html>` component.
- * @param {function} $0.setBodyAttributes Takes an object of props which will
- * spread into the `<body>` component.
- * @param {function} $0.setPreBodyComponents Takes an array of components as its
- * first argument which are added to the `preBodyComponents` array which is passed
- * to the `html.js` component.
- * @param {function} $0.setPostBodyComponents Takes an array of components as its
- * first argument which are added to the `postBodyComponents` array which is passed
- * to the `html.js` component.
- * @param {function} $0.setBodyProps Takes an object of data which
- * is merged with other body props and passed to `html.js` as `bodyProps`.
- * @param {pluginOptions} pluginOptions
- * @example
- * // Import React so that you can use JSX in HeadComponents
- * const React = require("react")
- *
- * const HtmlAttributes = {
- *   lang: "en"
- * }
- *
- * const HeadComponents = [
- *   <script key="my-script" src="https://gatsby.dev/my-script" />
- * ]
- *
- * const BodyAttributes = {
- *   "data-theme": "dark"
- * }
- *
- * exports.onRenderBody = ({
- *   setHeadComponents,
- *   setHtmlAttributes,
- *   setBodyAttributes
- * }, pluginOptions) => {
- *   setHtmlAttributes(HtmlAttributes)
- *   setHeadComponents(HeadComponents)
- *   setBodyAttributes(BodyAttributes)
- * }
- */
-exports.onRenderBody = true;
-
-/**
- * Called after every page Gatsby server renders while building HTML so you can
- * replace head components to be rendered in your `html.js`. This is useful if
- * you need to reorder scripts or styles added by other plugins.
- * @param {object} $0
- * @param {string} $0.pathname The pathname of the page currently being rendered.
- * @param {Array<ReactNode>} $0.getHeadComponents Returns the current `headComponents` array.
- * @param {function} $0.replaceHeadComponents Takes an array of components as its
- * first argument which replace the `headComponents` array which is passed
- * to the `html.js` component. **WARNING** if multiple plugins implement this
- * API it's the last plugin that "wins".
- * @param {Array<ReactNode>} $0.getPreBodyComponents Returns the current `preBodyComponents` array.
- *  @param {function} $0.replacePreBodyComponents Takes an array of components as its
- * first argument which replace the `preBodyComponents` array which is passed
- * to the `html.js` component. **WARNING** if multiple plugins implement this
- * API it's the last plugin that "wins".
- * @param {Array<ReactNode>} $0.getPostBodyComponents Returns the current `postBodyComponents` array.
- *  @param {function} $0.replacePostBodyComponents Takes an array of components as its
- * first argument which replace the `postBodyComponents` array which is passed
- * to the `html.js` component. **WARNING** if multiple plugins implement this
- * API it's the last plugin that "wins".
- * @param {pluginOptions} pluginOptions
- * @example
- * // Move Typography.js styles to the top of the head section so they're loaded first.
- * exports.onPreRenderHTML = ({ getHeadComponents, replaceHeadComponents }) => {
- *   const headComponents = getHeadComponents()
- *   headComponents.sort((x, y) => {
- *     if (x.key === 'TypographyStyle') {
- *       return -1
- *     } else if (y.key === 'TypographyStyle') {
- *       return 1
- *     }
- *     return 0
- *   })
- *   replaceHeadComponents(headComponents)
- * }
- */
-exports.onPreRenderHTML = true;
-
-/**
- * Allow a plugin to wrap the page element.
- *
- * This is useful for setting wrapper components around pages that won't get
- * unmounted on page changes. For setting context providers, use [wrapRootElement](#wrapRootElement).
- *
- * _Note:_
- * There is an equivalent hook in Gatsby's [Browser API](/docs/browser-apis/#wrapPageElement).
- * It is recommended to use both APIs together.
- * For example usage, check out [Using i18n](https://github.com/gatsbyjs/gatsby/tree/master/examples/using-i18n).
- * @param {object} $0
- * @param {ReactNode} $0.element The "Page" React Element built by Gatsby.
- * @param {object} $0.props Props object used by page.
- * @param {pluginOptions} pluginOptions
- * @returns {ReactNode} Wrapped element
- * @example
- * const React = require("react")
- * const Layout = require("./src/components/layout").default
- *
- * exports.wrapPageElement = ({ element, props }) => {
- *   // props provide same data to Layout as Page element will get
- *   // including location, data, etc - you don't need to pass it
- *   return <Layout {...props}>{element}</Layout>
- * }
- */
-exports.wrapPageElement = true;
-
-/**
- * Allow a plugin to wrap the root element.
- *
- * This is useful to set up any context providers that will wrap your application.
- * For setting persistent UI elements around pages use [wrapPageElement](#wrapPageElement).
- *
- * _Note:_
- * There is an equivalent hook in Gatsby's [Browser API](/docs/browser-apis/#wrapRootElement).
- * It is recommended to use both APIs together.
- * For example usage, check out [Using redux](https://github.com/gatsbyjs/gatsby/tree/master/examples/using-redux).
- * @param {object} $0
- * @param {string} $0.pathname The pathname of the page currently being rendered.
- * @param {ReactNode} $0.element The "Root" React Element built by Gatsby.
- * @param {pluginOptions} pluginOptions
- * @returns {ReactNode} Wrapped element
- * @example
- * const React = require("react")
- * const { Provider } = require("react-redux")
- *
- * const createStore = require("./src/state/createStore")
- * const store = createStore()
- *
- * exports.wrapRootElement = ({ element }) => {
- *   return (
- *     <Provider store={store}>
- *       {element}
- *     </Provider>
- *   )
- * }
- */
-exports.wrapRootElement = true;
-
-/***/ }),
-
-/***/ "./.cache/default-html.js":
-/*!********************************!*\
-  !*** ./.cache/default-html.js ***!
-  \********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ HTML)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-
-
-function HTML(props) {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("html", props.htmlAttributes, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("head", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("meta", {
-    charSet: "utf-8"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("meta", {
-    httpEquiv: "x-ua-compatible",
-    content: "ie=edge"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("meta", {
-    name: "viewport",
-    content: "width=device-width, initial-scale=1, shrink-to-fit=no"
-  }), props.headComponents), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("body", props.bodyAttributes, props.preBodyComponents, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    key: `body`,
-    id: "___gatsby",
-    dangerouslySetInnerHTML: {
-      __html: props.body
-    }
-  }), props.postBodyComponents));
-}
-HTML.propTypes = {
-  htmlAttributes: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().object),
-  headComponents: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().array),
-  bodyAttributes: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().object),
-  preBodyComponents: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().array),
-  body: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().string),
-  postBodyComponents: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().array)
-};
-
-/***/ }),
-
-/***/ "./node_modules/gatsby-plugin-image/gatsby-ssr.js":
-/*!********************************************************!*\
-  !*** ./node_modules/gatsby-plugin-image/gatsby-ssr.js ***!
-  \********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-var React = __webpack_require__(/*! react */ "react");
-var commonTags = __webpack_require__(/*! common-tags */ "./node_modules/common-tags/es/index.js");
-function _interopNamespace(e) {
-  if (e && e.__esModule) return e;
-  var n = Object.create(null);
-  if (e) {
-    Object.keys(e).forEach(function (k) {
-      if (k !== 'default') {
-        var d = Object.getOwnPropertyDescriptor(e, k);
-        Object.defineProperty(n, k, d.get ? d : {
-          enumerable: true,
-          get: function () {
-            return e[k];
-          }
-        });
-      }
-    });
-  }
-  n["default"] = e;
-  return n;
-}
-var React__namespace = /*#__PURE__*/_interopNamespace(React);
-var generateHtml = function generateHtml(str) {
-  return {
-    __html: commonTags.oneLine(str)
-  };
-};
-function onRenderBody(_ref) {
-  var setHeadComponents = _ref.setHeadComponents;
-  setHeadComponents([React__namespace.createElement("style", {
-    key: "gatsby-image-style",
-    dangerouslySetInnerHTML: generateHtml(".gatsby-image-wrapper{position:relative;overflow:hidden}.gatsby-image-wrapper picture.object-fit-polyfill{position:static!important}.gatsby-image-wrapper img{bottom:0;height:100%;left:0;margin:0;max-width:none;padding:0;position:absolute;right:0;top:0;width:100%;object-fit:cover}.gatsby-image-wrapper [data-main-image]{opacity:0;transform:translateZ(0);transition:opacity .25s linear;will-change:opacity}.gatsby-image-wrapper-constrained{display:inline-block;vertical-align:top}")
-  }), React__namespace.createElement("noscript", {
-    key: "gatsby-image-style-noscript",
-    dangerouslySetInnerHTML: generateHtml("<style>" + ".gatsby-image-wrapper noscript [data-main-image]{opacity:1!important}.gatsby-image-wrapper [data-placeholder-image]{opacity:0!important}" + "</style>")
-  }), React__namespace.createElement("script", {
-    key: "gatsby-image-style-script",
-    type: "module",
-    dangerouslySetInnerHTML: generateHtml("const e=\"undefined\"!=typeof HTMLImageElement&&\"loading\"in HTMLImageElement.prototype;e&&document.body.addEventListener(\"load\",(function(e){const t=e.target;if(void 0===t.dataset.mainImage)return;if(void 0===t.dataset.gatsbyImageSsr)return;let a=null,n=t;for(;null===a&&n;)void 0!==n.parentNode.dataset.gatsbyImageWrapper&&(a=n.parentNode),n=n.parentNode;const o=a.querySelector(\"[data-placeholder-image]\"),r=new Image;r.src=t.currentSrc,r.decode().catch((()=>{})).then((()=>{t.style.opacity=1,o&&(o.style.opacity=0,o.style.transition=\"opacity 500ms linear\")}))}),!0);")
-  })]);
-}
-exports.onRenderBody = onRenderBody;
 
 /***/ }),
 
@@ -6408,14 +6555,14 @@ if (false) {} else {
 
 /***/ }),
 
-/***/ "react-dom/server":
-/*!***********************************************************************************************************!*\
-  !*** external "/Users/bbienz/Visual Studio Code/PhoenixTheatrical-Site/node_modules/react-dom/server.js" ***!
-  \***********************************************************************************************************/
+/***/ "crypto":
+/*!*************************!*\
+  !*** external "crypto" ***!
+  \*************************/
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("/Users/bbienz/Visual Studio Code/PhoenixTheatrical-Site/node_modules/react-dom/server.js");
+module.exports = require("crypto");
 
 /***/ }),
 
@@ -6430,161 +6577,14 @@ module.exports = require("/Users/bbienz/Visual Studio Code/PhoenixTheatrical-Sit
 
 /***/ }),
 
-/***/ "crypto":
-/*!*************************!*\
-  !*** external "crypto" ***!
-  \*************************/
+/***/ "react-dom/server":
+/*!***********************************************************************************************************!*\
+  !*** external "/Users/bbienz/Visual Studio Code/PhoenixTheatrical-Site/node_modules/react-dom/server.js" ***!
+  \***********************************************************************************************************/
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("crypto");
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/interopRequireDefault.js ***!
-  \**********************************************************************/
-/***/ ((module) => {
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : {
-    "default": obj
-  };
-}
-module.exports = _interopRequireDefault, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-
-/***/ "./node_modules/@builder.io/partytown/integration/index.cjs":
-/*!******************************************************************!*\
-  !*** ./node_modules/@builder.io/partytown/integration/index.cjs ***!
-  \******************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-const PartytownSnippet = "/* Partytown 0.7.5 - MIT builder.io */\n!function(t,e,n,i,r,o,a,d,s,c,p,l){function u(){l||(l=1,\"/\"==(a=(o.lib||\"/~partytown/\")+(o.debug?\"debug/\":\"\"))[0]&&(s=e.querySelectorAll('script[type=\"text/partytown\"]'),i!=t?i.dispatchEvent(new CustomEvent(\"pt1\",{detail:t})):(d=setTimeout(f,1e4),e.addEventListener(\"pt0\",w),r?h(1):n.serviceWorker?n.serviceWorker.register(a+(o.swPath||\"partytown-sw.js\"),{scope:a}).then((function(t){t.active?h():t.installing&&t.installing.addEventListener(\"statechange\",(function(t){\"activated\"==t.target.state&&h()}))}),console.error):f())))}function h(t){c=e.createElement(t?\"script\":\"iframe\"),t||(c.setAttribute(\"style\",\"display:block;width:0;height:0;border:0;visibility:hidden\"),c.setAttribute(\"aria-hidden\",!0)),c.src=a+\"partytown-\"+(t?\"atomics.js?v=0.7.5\":\"sandbox-sw.html?\"+Date.now()),e.body.appendChild(c)}function f(n,r){for(w(),i==t&&(o.forward||[]).map((function(e){delete t[e.split(\".\")[0]]})),n=0;n<s.length;n++)(r=e.createElement(\"script\")).innerHTML=s[n].innerHTML,e.head.appendChild(r);c&&c.parentNode.removeChild(c)}function w(){clearTimeout(d)}o=t.partytown||{},i==t&&(o.forward||[]).map((function(e){p=t,e.split(\".\").map((function(e,n,i){p=p[i[n]]=n+1<i.length?\"push\"==i[n+1]?[]:p[i[n]]||{}:function(){(t._ptf=t._ptf||[]).push(i,arguments)}}))})),\"complete\"==e.readyState?u():(t.addEventListener(\"DOMContentLoaded\",u),t.addEventListener(\"load\",u))}(window,document,navigator,top,window.crossOriginIsolated);";
-
-const createSnippet = (config, snippetCode) => {
-    const { forward = [], ...filteredConfig } = config || {};
-    const configStr = JSON.stringify(filteredConfig, (k, v) => {
-        if (typeof v === 'function') {
-            v = String(v);
-            if (v.startsWith(k + '(')) {
-                v = 'function ' + v;
-            }
-        }
-        return v;
-    });
-    return [
-        `!(function(w,p,f,c){`,
-        Object.keys(filteredConfig).length > 0
-            ? `c=w[p]=Object.assign(w[p]||{},${configStr});`
-            : `c=w[p]=w[p]||{};`,
-        `c[f]=(c[f]||[])`,
-        forward.length > 0 ? `.concat(${JSON.stringify(forward)})` : ``,
-        `})(window,'partytown','forward');`,
-        snippetCode,
-    ].join('');
-};
-
-/**
- * The `type` attribute for Partytown scripts, which does two things:
- *
- * 1. Prevents the `<script>` from executing on the main thread.
- * 2. Is used as a selector so the Partytown library can find all scripts to execute in a web worker.
- *
- * @public
- */
-const SCRIPT_TYPE = `text/partytown`;
-
-/**
- * Function that returns the Partytown snippet as a string, which can be
- * used as the innerHTML of the inlined Partytown script in the head.
- *
- * @public
- */
-const partytownSnippet = (config) => createSnippet(config, PartytownSnippet);
-
-exports.SCRIPT_TYPE = SCRIPT_TYPE;
-exports.partytownSnippet = partytownSnippet;
-
-
-/***/ }),
-
-/***/ "./node_modules/@gatsbyjs/reach-router/dist/index.modern.mjs":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@gatsbyjs/reach-router/dist/index.modern.mjs ***!
-  \*******************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-var react__WEBPACK_IMPORTED_MODULE_0___namespace_cache;
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   BaseContext: () => (/* binding */ m),
-/* harmony export */   Link: () => (/* binding */ A),
-/* harmony export */   Location: () => (/* binding */ G),
-/* harmony export */   LocationContext: () => (/* binding */ d),
-/* harmony export */   LocationProvider: () => (/* binding */ z),
-/* harmony export */   Match: () => (/* binding */ Q),
-/* harmony export */   Redirect: () => (/* binding */ R),
-/* harmony export */   Router: () => (/* binding */ oe),
-/* harmony export */   ServerLocation: () => (/* binding */ J),
-/* harmony export */   createHistory: () => (/* binding */ i),
-/* harmony export */   createMemorySource: () => (/* binding */ c),
-/* harmony export */   globalHistory: () => (/* binding */ l),
-/* harmony export */   insertParams: () => (/* binding */ P),
-/* harmony export */   isRedirect: () => (/* binding */ g),
-/* harmony export */   match: () => (/* binding */ x),
-/* harmony export */   navigate: () => (/* binding */ p),
-/* harmony export */   pick: () => (/* binding */ w),
-/* harmony export */   redirectTo: () => (/* binding */ v),
-/* harmony export */   resolve: () => (/* binding */ k),
-/* harmony export */   shallowCompare: () => (/* binding */ D),
-/* harmony export */   startsWith: () => (/* binding */ C),
-/* harmony export */   useBaseContext: () => (/* binding */ f),
-/* harmony export */   useLocation: () => (/* binding */ se),
-/* harmony export */   useLocationContext: () => (/* binding */ y),
-/* harmony export */   useMatch: () => (/* binding */ ue),
-/* harmony export */   useNavigate: () => (/* binding */ ie),
-/* harmony export */   useParams: () => (/* binding */ ce),
-/* harmony export */   validateRedirect: () => (/* binding */ T)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var invariant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! invariant */ "./node_modules/invariant/invariant.js");
-function o(){return o=Object.assign?Object.assign.bind():function(e){for(var t=1;t<arguments.length;t++){var r=arguments[t];for(var n in r)Object.prototype.hasOwnProperty.call(r,n)&&(e[n]=r[n])}return e},o.apply(this,arguments)}function a(e,t){if(null==e)return{};var r,n,o={},a=Object.keys(e);for(n=0;n<a.length;n++)t.indexOf(r=a[n])>=0||(o[r]=e[r]);return o}const s=e=>{const{search:t,hash:r,href:n,origin:o,protocol:a,host:s,hostname:i,port:c}=e.location;let{pathname:l}=e.location;return!l&&n&&u&&(l=new URL(n).pathname),{pathname:encodeURI(decodeURI(l)),search:t,hash:r,href:n,origin:o,protocol:a,host:s,hostname:i,port:c,state:e.history.state,key:e.history.state&&e.history.state.key||"initial"}},i=(e,t)=>{let r=[],n=s(e),a=!1,i=()=>{};return{get location(){return n},get transitioning(){return a},_onTransitionComplete(){a=!1,i()},listen(t){r.push(t);const o=()=>{n=s(e),t({location:n,action:"POP"})};return e.addEventListener("popstate",o),()=>{e.removeEventListener("popstate",o),r=r.filter(e=>e!==t)}},navigate(t,{state:c,replace:u=!1}={}){if("number"==typeof t)e.history.go(t);else{c=o({},c,{key:Date.now()+""});try{a||u?e.history.replaceState(c,null,t):e.history.pushState(c,null,t)}catch(r){e.location[u?"replace":"assign"](t)}}n=s(e),a=!0;const l=new Promise(e=>i=e);return r.forEach(e=>e({location:n,action:"PUSH"})),l}}},c=(e="/")=>{const t=e.indexOf("?"),r={pathname:t>-1?e.substr(0,t):e,search:t>-1?e.substr(t):""};let n=0;const o=[r],a=[null];return{get location(){return o[n]},addEventListener(e,t){},removeEventListener(e,t){},history:{get entries(){return o},get index(){return n},get state(){return a[n]},pushState(e,t,r){const[s,i=""]=r.split("?");n++,o.push({pathname:s,search:i.length?`?${i}`:i}),a.push(e)},replaceState(e,t,r){const[s,i=""]=r.split("?");o[n]={pathname:s,search:i},a[n]=e},go(e){const t=n+e;t<0||t>a.length-1||(n=t)}}}},u=!("undefined"==typeof window||!window.document||!window.document.createElement),l=i(u?window:c()),{navigate:p}=l;function h(e,r){return react__WEBPACK_IMPORTED_MODULE_0__.createServerContext?((e,r=null)=>(globalThis.__SERVER_CONTEXT||(globalThis.__SERVER_CONTEXT={}),globalThis.__SERVER_CONTEXT[e]||(globalThis.__SERVER_CONTEXT[e]=react__WEBPACK_IMPORTED_MODULE_0__.createServerContext(e,r)),globalThis.__SERVER_CONTEXT[e]))(e,r):react__WEBPACK_IMPORTED_MODULE_0__.createContext(r)}const m=h("Base",{baseuri:"/",basepath:"/"}),d=h("Location"),f=()=>react__WEBPACK_IMPORTED_MODULE_0__.useContext(m),y=()=>react__WEBPACK_IMPORTED_MODULE_0__.useContext(d);function E(e){this.uri=e}const g=e=>e instanceof E,v=e=>{throw new E(e)};function b(t){const{to:r,replace:n=!0,state:o,noThrow:a,baseuri:s}=t;react__WEBPACK_IMPORTED_MODULE_0__.useEffect(()=>{Promise.resolve().then(()=>{const e=k(r,s);p(P(e,t),{replace:n,state:o})})},[]);const i=k(r,s);return a||v(P(i,t)),null}const R=t=>{const r=y(),{baseuri:n}=f();/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(b,o({},r,{baseuri:n},t))};R.propTypes={from:prop_types__WEBPACK_IMPORTED_MODULE_2__.string,to:prop_types__WEBPACK_IMPORTED_MODULE_2__.string.isRequired};const C=(e,t)=>e.substr(0,t.length)===t,w=(e,t)=>{let r,o;const[a]=t.split("?"),s=N(a),i=""===s[0],c=j(e);for(let e=0,a=c.length;e<a;e++){let a=!1;const u=c[e].route;if(u.default){o={route:u,params:{},uri:t};continue}const l=N(u.path),p={},h=Math.max(s.length,l.length);let m=0;for(;m<h;m++){const e=l[m],t=s[m];if($(e)){p[e.slice(1)||"*"]=s.slice(m).map(decodeURIComponent).join("/");break}if(void 0===t){a=!0;break}const r=O.exec(e);if(r&&!i){const e=-1===U.indexOf(r[1]);invariant__WEBPACK_IMPORTED_MODULE_1__(e,`<Router> dynamic segment "${r[1]}" is a reserved name. Please use a different name in path "${u.path}".`);const o=decodeURIComponent(t);p[r[1]]=o}else if(e!==t){a=!0;break}}if(!a){r={route:u,params:p,uri:"/"+s.slice(0,m).join("/")};break}}return r||o||null},x=(e,t)=>w([{path:e}],t),k=(e,t)=>{if(C(e,"/"))return e;const[r,n]=e.split("?"),[o]=t.split("?"),a=N(r),s=N(o);if(""===a[0])return L(o,n);if(!C(a[0],".")){const e=s.concat(a).join("/");return L(("/"===o?"":"/")+e,n)}const i=s.concat(a),c=[];for(let e=0,t=i.length;e<t;e++){const t=i[e];".."===t?c.pop():"."!==t&&c.push(t)}return L("/"+c.join("/"),n)},P=(e,t)=>{const[r,n=""]=e.split("?");let o="/"+N(r).map(e=>{const r=O.exec(e);return r?t[r[1]]:e}).join("/");const{location:{search:a=""}={}}=t,s=a.split("?")[1]||"";return o=L(o,n,s),o},T=(e,t)=>{const r=e=>_(e);return N(e).filter(r).sort().join("/")===N(t).filter(r).sort().join("/")},O=/^:(.+)/,_=e=>O.test(e),$=e=>e&&"*"===e[0],S=(e,t)=>({route:e,score:e.default?0:N(e.path).reduce((e,t)=>(e+=4,(e=>""===e)(t)?e+=1:_(t)?e+=2:$(t)?e-=5:e+=3,e),0),index:t}),j=e=>e.map(S).sort((e,t)=>e.score<t.score?1:e.score>t.score?-1:e.index-t.index),N=e=>e.replace(/(^\/+|\/+$)/g,"").split("/"),L=(e,...t)=>e+((t=t.filter(e=>e&&e.length>0))&&t.length>0?`?${t.join("&")}`:""),U=["uri","path"],D=(e,t)=>{const r=Object.keys(e);return r.length===Object.keys(t).length&&r.every(r=>t.hasOwnProperty(r)&&e[r]===t[r])},M=e=>e.replace(/(^\/+|\/+$)/g,""),I=t=>r=>{if(!r)return null;if(r.type===react__WEBPACK_IMPORTED_MODULE_0__.Fragment&&r.props.children)return react__WEBPACK_IMPORTED_MODULE_0__.Children.map(r.props.children,I(t));if(invariant__WEBPACK_IMPORTED_MODULE_1__(r.props.path||r.props.default||r.type===R,`<Router>: Children of <Router> must have a \`path\` or \`default\` prop, or be a \`<Redirect>\`. None found on element type \`${r.type}\``),invariant__WEBPACK_IMPORTED_MODULE_1__(!!(r.type!==R||r.props.from&&r.props.to),`<Redirect from="${r.props.from}" to="${r.props.to}"/> requires both "from" and "to" props when inside a <Router>.`),invariant__WEBPACK_IMPORTED_MODULE_1__(!(r.type===R&&!T(r.props.from,r.props.to)),`<Redirect from="${r.props.from} to="${r.props.to}"/> has mismatched dynamic segments, ensure both paths have the exact same dynamic segments.`),r.props.default)return{value:r,default:!0};const o=r.type===R?r.props.from:r.props.path,a="/"===o?t:`${M(t)}/${M(o)}`;return{value:r,default:r.props.default,path:r.props.children?`${M(a)}/*`:a}},V=["innerRef"],q=["to","state","replace","getProps"],X=["key"];let{forwardRef:B}=/*#__PURE__*/ (react__WEBPACK_IMPORTED_MODULE_0___namespace_cache || (react__WEBPACK_IMPORTED_MODULE_0___namespace_cache = __webpack_require__.t(react__WEBPACK_IMPORTED_MODULE_0__, 2)));void 0===B&&(B=e=>e);const K=()=>{},A=B((t,r)=>{let{innerRef:n}=t,s=a(t,V);const{baseuri:i}=f(),{location:c}=y(),{to:u,state:l,replace:h,getProps:m=K}=s,d=a(s,q),E=k(u,i),g=encodeURI(E),v=c.pathname===g,b=C(c.pathname,g);/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement("a",o({ref:r||n,"aria-current":v?"page":void 0},d,m({isCurrent:v,isPartiallyCurrent:b,href:E,location:c}),{href:E,onClick:e=>{if(d.onClick&&d.onClick(e),(e=>!e.defaultPrevented&&0===e.button&&!(e.metaKey||e.altKey||e.ctrlKey||e.shiftKey))(e)){e.preventDefault();let t=h;if("boolean"!=typeof h&&v){const e=a(o({},c.state),X);t=D(o({},l),e)}p(E,{state:l,replace:t})}}}))});A.displayName="Link",A.propTypes={to:prop_types__WEBPACK_IMPORTED_MODULE_2__.string.isRequired};class F extends react__WEBPACK_IMPORTED_MODULE_0__.Component{constructor(...e){super(...e),this.displayName="ReactUseErrorBoundary"}componentDidCatch(...e){this.setState({}),this.props.onError(...e)}render(){return this.props.children}}const W=react__WEBPACK_IMPORTED_MODULE_0__.createContext({componentDidCatch:{current:void 0},error:void 0,setError:()=>!1});function H({children:t}){const[r,n]=react__WEBPACK_IMPORTED_MODULE_0__.useState(),o=react__WEBPACK_IMPORTED_MODULE_0__.useRef(),a=react__WEBPACK_IMPORTED_MODULE_0__.useMemo(()=>({componentDidCatch:o,error:r,setError:n}),[r]);/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(W.Provider,{value:a},/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(F,{error:r,onError:(e,t)=>{n(e),null==o.current||o.current(e,t)}},t))}H.displayName="ReactUseErrorBoundaryContext";const z=function(t){var r,n;function a(r){/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(H,null,/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(t,o({key:"WrappedComponent"},r)))}return a.displayName=`WithErrorBoundary(${null!=(r=null!=(n=t.displayName)?n:t.name)?r:"Component"})`,a}(({history:t=l,children:r})=>{const{location:n}=t,[o,a]=react__WEBPACK_IMPORTED_MODULE_0__.useState({location:n}),[s]=function(t){const r=react__WEBPACK_IMPORTED_MODULE_0__.useContext(W);r.componentDidCatch.current=void 0;const n=react__WEBPACK_IMPORTED_MODULE_0__.useCallback(()=>{r.setError(void 0)},[]);return[r.error,n]}();if(react__WEBPACK_IMPORTED_MODULE_0__.useEffect(()=>{t._onTransitionComplete()},[o.location]),react__WEBPACK_IMPORTED_MODULE_0__.useEffect(()=>{let e=!1;const r=t.listen(({location:t})=>{Promise.resolve().then(()=>{requestAnimationFrame(()=>{e||a({location:t})})})});return()=>{e=!0,r()}},[]),s){if(!g(s))throw s;p(s.uri,{replace:!0})}/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(d.Provider,{value:o},"function"==typeof r?r(o):r||null)}),G=({children:t})=>{const r=y();return r?t(r):/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(z,null,t)},J=({url:t,children:r})=>{const n=t.indexOf("?");let o,a="";return n>-1?(o=t.substring(0,n),a=t.substring(n)):o=t,/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(d.Provider,{value:{location:{pathname:o,search:a,hash:""}}},r)},Q=({path:e,children:t})=>{const{baseuri:r}=f(),{location:n}=y(),a=k(e,r),s=x(a,n.pathname);return t({location:n,match:s?o({},s.params,{uri:s.uri,path:e}):null})},Y=["uri","location","component"],Z=["children","style","component","uri","location"],ee=t=>{let{uri:r,location:n,component:s}=t,i=a(t,Y);/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(re,o({},i,{component:s,uri:r,location:n}))};let te=0;const re=t=>{let{children:r,style:n,component:s="div",uri:i,location:c}=t,u=a(t,Z);const l=react__WEBPACK_IMPORTED_MODULE_0__.useRef(),p=react__WEBPACK_IMPORTED_MODULE_0__.useRef(!0),h=react__WEBPACK_IMPORTED_MODULE_0__.useRef(i),m=react__WEBPACK_IMPORTED_MODULE_0__.useRef(c.pathname),d=react__WEBPACK_IMPORTED_MODULE_0__.useRef(!1);react__WEBPACK_IMPORTED_MODULE_0__.useEffect(()=>(te++,f(),()=>{te--,0===te&&(p.current=!0)}),[]),react__WEBPACK_IMPORTED_MODULE_0__.useEffect(()=>{let e=!1,t=!1;i!==h.current&&(h.current=i,e=!0),c.pathname!==m.current&&(m.current=c.pathname,t=!0),d.current=e||t&&c.pathname===i,d.current&&f()},[i,c]);const f=react__WEBPACK_IMPORTED_MODULE_0__.useCallback(()=>{var e; true&&(p.current?p.current=!1:(e=l.current,d.current&&e&&e.focus()))},[]);/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(s,o({style:o({outline:"none"},n),tabIndex:"-1",ref:l},u),r)},ne=["location","primary","children","basepath","baseuri","component"],oe=t=>{const r=f(),n=y();/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(ae,o({},r,n,t))};function ae(t){const{location:r,primary:n=!0,children:s,basepath:i,component:c="div"}=t,u=a(t,ne),l=react__WEBPACK_IMPORTED_MODULE_0__.Children.toArray(s).reduce((e,t)=>{const r=I(i)(t);return e.concat(r)},[]),{pathname:p}=r,h=w(l,p);if(h){const{params:t,uri:a,route:s,route:{value:l}}=h,p=s.default?i:s.path.replace(/\*$/,""),d=o({},t,{uri:a,location:r}),f=react__WEBPACK_IMPORTED_MODULE_0__.cloneElement(l,d,l.props.children?/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(oe,{location:r,primary:n},l.props.children):void 0),y=n?ee:c,E=n?o({uri:a,location:r,component:c},u):u;/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(m.Provider,{value:{baseuri:a,basepath:p}},/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(y,E,f))}return null}const se=()=>{const e=y();if(!e)throw new Error("useLocation hook was used but a LocationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router");return e.location},ie=()=>{throw new Error("useNavigate is removed. Use import { navigate } from 'gatsby' instead")},ce=()=>{const e=f();if(!e)throw new Error("useParams hook was used but a LocationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router");const t=se(),r=x(e.basepath,t.pathname);return r?r.params:null},ue=e=>{if(!e)throw new Error("useMatch(path: string) requires an argument of a string to match against");const t=f();if(!t)throw new Error("useMatch hook was used but a LocationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router");const r=se(),n=k(e,t.baseuri),a=x(n,r.pathname);return a?o({},a.params,{uri:a.uri,path:e}):null};
-//# sourceMappingURL=index.modern.mjs.map
-
-
-/***/ }),
-
-/***/ "./node_modules/gatsby-script/dist/index.modern.mjs":
-/*!**********************************************************!*\
-  !*** ./node_modules/gatsby-script/dist/index.modern.mjs ***!
-  \**********************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Script: () => (/* binding */ f),
-/* harmony export */   ScriptStrategy: () => (/* binding */ c),
-/* harmony export */   collectedScriptsByPage: () => (/* binding */ l),
-/* harmony export */   scriptCache: () => (/* binding */ u),
-/* harmony export */   scriptCallbackCache: () => (/* binding */ d)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var _gatsbyjs_reach_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @gatsbyjs/reach-router */ "./node_modules/@gatsbyjs/reach-router/dist/index.modern.mjs");
-"use client"
-;function o(){return o=Object.assign?Object.assign.bind():function(t){for(var e=1;e<arguments.length;e++){var n=arguments[e];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(t[r]=n[r])}return t},o.apply(this,arguments)}const a=new Map,l={get:t=>a.get(t)||[],set(t,e){const n=a.get(t)||[];n.push(e),a.set(t,n)},delete(t){a.delete(t)}},s="undefined"!=typeof self&&self.requestIdleCallback&&self.requestIdleCallback.bind(window)||function(t){const e=Date.now();return setTimeout(function(){t({didTimeout:!1,timeRemaining:function(){return Math.max(0,50-(Date.now()-e))}})},1)};var c;!function(t){t.postHydrate="post-hydrate",t.idle="idle",t.offMainThread="off-main-thread"}(c||(c={}));const i=new Set(["src","strategy","dangerouslySetInnerHTML","children","onLoad","onError"]),u=new Set,d=new Map;function f(e){/*#__PURE__*/return react__WEBPACK_IMPORTED_MODULE_0__.createElement(_gatsbyjs_reach_router__WEBPACK_IMPORTED_MODULE_1__.Location,null,()=>/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(p,e))}function p(n){const{src:a,strategy:i=c.postHydrate}=n||{},{pathname:u}=(0,_gatsbyjs_reach_router__WEBPACK_IMPORTED_MODULE_1__.useLocation)();if((0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(()=>{let t;switch(i){case c.postHydrate:t=y(n);break;case c.idle:s(()=>{t=y(n)});break;case c.offMainThread:{const t=b(n);l.set(u,t)}}return()=>{const{script:e,loadCallback:n,errorCallback:r}=t||{};n&&(null==e||e.removeEventListener("load",n)),r&&(null==e||e.removeEventListener("error",r)),null==e||e.remove()}},[]),i===c.offMainThread){const e=m(n),r=b(n);return"undefined"==typeof window&&l.set(u,r),/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("script",e?o({type:"text/partytown","data-strategy":i,crossOrigin:"anonymous"},r,{dangerouslySetInnerHTML:{__html:m(n)}}):o({type:"text/partytown",src:h(a),"data-strategy":i,crossOrigin:"anonymous"},r))}return null}function y(t){const{id:e,src:n,strategy:r=c.postHydrate,onLoad:a,onError:l}=t||{},s=e||n,i=["load","error"],f={load:a,error:l};if(s){for(const t of i)if(null!=f&&f[t]){var p;const e=d.get(s)||{},{callbacks:n=[]}=(null==e?void 0:e[t])||{};var y,h;n.push(null==f?void 0:f[t]),null!=e&&null!=(p=e[t])&&p.event?null==f||null==(y=f[t])||y.call(f,null==e||null==(h=e[t])?void 0:h.event):d.set(s,o({},e,{[t]:{callbacks:n}}))}if(u.has(s))return null}const v=m(t),k=b(t),w=document.createElement("script");e&&(w.id=e),w.dataset.strategy=r;for(const[t,e]of Object.entries(k))w.setAttribute(t,e);v&&(w.textContent=v),n&&(w.src=n);const C={};if(s){for(const t of i){const e=e=>g(e,s,t);w.addEventListener(t,e),C[`${t}Callback`]=e}u.add(s)}return document.body.appendChild(w),{script:w,loadCallback:C.loadCallback,errorCallback:C.errorCallback}}function m(t){const{dangerouslySetInnerHTML:e,children:n=""}=t||{},{__html:r=""}=e||{};return r||n}function b(t){const e={};for(const[n,r]of Object.entries(t))i.has(n)||(e[n]=r);return e}function h(t){if(t)return`/__third-party-proxy?url=${encodeURIComponent(t)}`}function g(t,e,n){const r=d.get(e)||{};for(const e of(null==r||null==(o=r[n])?void 0:o.callbacks)||[]){var o;e(t)}d.set(e,{[n]:{event:t}})}
-//# sourceMappingURL=index.modern.mjs.map
-
+module.exports = require("/Users/bbienz/Visual Studio Code/PhoenixTheatrical-Site/node_modules/react-dom/server.js");
 
 /***/ })
 
@@ -6766,7 +6766,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 (() => {
 "use strict";
 /*!****************************************!*\
@@ -6904,7 +6904,7 @@ function getPageChunk({
 })();
 
 var __webpack_export_target__ = exports;
-for(var i in __webpack_exports__) __webpack_export_target__[i] = __webpack_exports__[i];
+for(var __webpack_i__ in __webpack_exports__) __webpack_export_target__[__webpack_i__] = __webpack_exports__[__webpack_i__];
 if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, "__esModule", { value: true });
 /******/ })()
 ;
