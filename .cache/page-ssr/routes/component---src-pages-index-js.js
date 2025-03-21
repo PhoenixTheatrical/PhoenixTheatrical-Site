@@ -1227,7 +1227,6 @@ const prefetch = function (url, options) {
     }).catch(() => {}); // 404s are logged to the console anyway
   });
 };
-
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (prefetch);
 
 /***/ }),
@@ -1504,7 +1503,7 @@ const ServerSliceRenderer = ({
     // if children exist, we split the slice into a before and after piece
     // see renderSlices in render-html
     contents.push(children);
-    contents.push( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(`slice-start`, {
+    contents.push(/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(`slice-start`, {
       id: `${sliceId}-2`
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(`slice-end`, {
       id: `${sliceId}-2`
