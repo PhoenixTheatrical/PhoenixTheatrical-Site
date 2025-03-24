@@ -1,0 +1,54 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+const { frontmatter } = Astro.props;
+---
+<BaseLayout>
+<h1><em>{frontmatter.showName}</em>:{frontmatter.venue}</h1>
+<h2>{frontmatter.location}</h2>
+<h3>
+  {frontmatter.showDateStart.toString().slice(0, 10)}
+  to
+  {frontmatter.showDateEnd.toString().slice(0, 10)}
+</h3>
+<img
+  src={frontmatter.postImage.url}
+  width="300"
+  alt={frontmatter.postImage.alt}
+/>
+<h2>Position: {frontmatter.position}</h2>
+<h3>
+  Work Dates: 
+  {frontmatter.positionDateStart.toString().slice(0, 10)}
+  to
+  {frontmatter.positionDateEnd.toString().slice(0, 10)}
+</h3>
+<div class="tags">
+  {
+    frontmatter.tags.map((tag: string) => (
+      <p class="tag">
+        <a href={`/tags/${tag}`}>#{tag}</a>
+      </p>
+    ))
+  }
+</div>
+<slot />
+</BaseLayout>
+<style>
+  a {
+    color: #00539f;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    margin: 0.25em;
+    border: dotted 1px #a1a1a1;
+    border-radius: 0.5em;
+    padding: 0.5em 1em;
+    font-size: 1.15em;
+    background-color: #f8fcfd;
+  }
+</style>

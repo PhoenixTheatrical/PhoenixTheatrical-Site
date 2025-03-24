@@ -1,0 +1,97 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+
+const pageTitle = "About Me";
+
+const identity = {
+  firstName: "Bryce",
+  country: "United States of America",
+  occupation: "Theatrical Technician",
+  hobbies: ["Biking", "Watersports", "3D Modeling and Printing"],
+};
+
+const skills = ["HTML", "CSS", "JavaScript", "Basic WebDevelopment"];
+
+const happy = true;
+const finished = false;
+const goal = 7;
+
+const skillColor = "cyan";
+const fontWeight = "bold";
+const textCase = "uppercase";
+---
+<BaseLayout pageTitle={pageTitle}>
+    <p>
+      Bryce Bienz graduated from Point Park University in Pittsburgh, BFA in
+      Theatrical Production: Technical Direction and Management. Originally from
+      Wyoming, Bryce’s career in theater began at a young age, hauling audio
+      equipment for family music performances and community events. In high
+      school, they expanded their interests by working with the drama department
+      as a sound designer and mix engineer for musicals.
+    </p>
+    <p>
+      At the Pittsburgh Playhouse, Bryce has contributed to the audio design and
+      operation for productions like
+      <em> Spring Awakening</em>,<em> Cinderella</em>,
+      <em> Closer Than Ever</em>,<em> RENT</em>, and
+      <em> Jerry's Girls </em>
+      They’ve also worked as a freelance Lighting Designer for dance performances,
+      including shows for Laramie Dance Studio B.
+    </p>
+    <p>
+      Bryce’s technical expertise spans lights, audio, and AV systems. They are
+      passionate about finding creative solutions to technical challenges, with
+      a particular interest in making systems communicate in new and innovative
+      ways. Their quick learning and hands-on problem-solving skills have been
+      showcased in projects for example; programming the Watchout media server
+      for
+      <em> Billy Strayhorn: Something to Live For </em> at Pittsburgh Public Theater,
+      where they took over the programming after only one day of shadowing.
+    </p>
+    <p>
+      When not immersed in tech, Bryce enjoys outdoor activities like hiking,
+      swimming, biking, and climbing.
+    </p>
+    <p>
+      Bryce is currently working as a freelance lighting designer/programmer,
+      mix engineer, and video programmer and is always interested in a
+      challenge. Please reach out to
+      <a href="mailto:bryce.bienz@phoenixtheatrical.com">
+        bryce.bienz@phoenixtheatrical.com
+      </a>
+      to connect!
+    </p>
+
+    <p>Here are a few facts about me:</p>
+    <ul>
+      <li>My name is {identity.firstName}.</li>
+      <li>
+        I live in {identity.country} and I work as a {identity.occupation}.
+      </li>
+      {
+        identity.hobbies.length >= 2 && (
+          <li>
+            Two of my hobbies are: {identity.hobbies[0]} and{" "}
+            {identity.hobbies[1]}
+          </li>
+        )
+      }
+    </ul>
+    <p>My skills are:</p>
+    <ul>
+      {skills.map((skill) => <li class="skill">{skill}</li>)}
+    </ul>
+
+    {happy && <p>I am happy to be learning Astro!</p>}
+
+    {finished && <p>I finished this tutorial!</p>}
+
+    {
+      goal === 7 ? (
+        <p>My goal is to finish in 7 days.</p>
+      ) : (
+        <p>My goal is not 7 days.</p>
+      )
+    }
+</BaseLayout>
