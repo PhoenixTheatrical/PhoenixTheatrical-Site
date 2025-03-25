@@ -28,7 +28,3 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
-
-
-# including the node_modules files
-.node_modules
