@@ -1,0 +1,97 @@
+@use "../abstracts";
+@use "sass:map";
+
+/// h1 map
+/// @prop {String} keys
+/// @prop {Map} values
+$h1-attributes: (
+  "FontSize": "2xl",
+  "LineHeight": "sm",
+) !default;
+
+/// h2 map
+/// @prop {String} keys
+/// @prop {Map} values
+$h2-attributes: (
+  "FontSize": "xl",
+  "LineHeight": "sm",
+) !default;
+
+/// h3 map
+/// @prop {String} keys
+/// @prop {Map} values
+$h3-attributes: (
+  "FontSize": "lg",
+  "LineHeight": "sm",
+) !default;
+
+/// h4 map
+/// @prop {String} keys
+/// @prop {Map} values
+$h4-attributes: (
+  "FontSize": "md",
+  "LineHeight": "sm",
+) !default;
+
+/// h5 map
+/// @prop {String} keys
+/// @prop {Map} values
+$h5-attributes: (
+  "FontSize": "md",
+  "LineHeight": "sm",
+) !default;
+
+/// h6 map
+/// @prop {String} keys
+/// @prop {Map} values
+$h6-attributes: (
+  "FontSize": "md",
+  "LineHeight": "sm",
+) !default;
+
+/// body map
+/// @prop {String} keys
+/// @prop {Map} values
+$body-attributes: (
+  "FontSize": "sm",
+  "LineHeight": "md",
+) !default;
+
+/// body-lg map
+/// @prop {String} keys
+/// @prop {Map} values
+$body-lg-attributes: (
+  "FontSize": "md",
+  "LineHeight": "md",
+) !default;
+
+/// body-sm map
+/// @prop {String} keys
+/// @prop {Map} values
+$body-sm-attributes: (
+  "FontSize": "xs",
+  "LineHeight": "md",
+) !default;
+
+@function attribute-search($variabletosearch, $keytosearch) {
+  @return map.get($variabletosearch, $keytosearch);
+}
+
+@debug attribute-search($body-sm-attributes, "LineHeight");
+
+@function variable-map-get($variablemap, $variablekey) {
+  @return map.get($variablemap, $variablekey);
+}
+
+/**
+ * Basic typography style for copy text
+ */
+body {
+  color: abstracts.$text-color;
+  font: normal 125% / 1.4 abstracts.$text-font-stack;
+}
+
+html {
+  line-height: attribute-search($body-sm-attributes, "LineHeight");
+  font-size: variable-map-get(abstracts.$FontSize, "lg");
+}

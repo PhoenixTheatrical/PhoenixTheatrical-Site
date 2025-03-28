@@ -1,0 +1,43 @@
+@charset "UTF-8";
+
+// 1. Vendors
+
+// 2. Base stuff
+@use "base/base";
+@use "base/fonts";
+@use "base/helpers";
+@use "base/typography";
+
+// 3. Layout-related sections
+@use "layout/footer";
+@use "layout/header";
+
+// 4. Components
+@use "components/button";
+
+// 5. Pages
+/* @use 'pages/home'; */
+
+// 6. Themes
+@use "themes/default";
+
+/* TEST STUFF HERE */
+html {
+  background-color: black;
+}
+
+/* 
+--- Notes and thots ---
+
+When switching between Theme Light & Theme dark, change
+/// Copy text color
+/// @type Color
+$text-color: functions.tint(functions.tone($brand-color-primary, 90%),35%) !default;
+^ for dark
+$text-color: functions.shade(functions.tone($brand-color-primary, 90%),35%) !default;
+^ for light
+
+
+
+
+*/

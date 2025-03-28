@@ -11,6 +11,8 @@
   "dependencies": {
     "@astrojs/preact": "^4.0.6",
     "astro": "^5.5.4",
-    "preact": "^10.26.4"
+    "astro-icon": "^1.1.5",
+    "preact": "^10.26.4",
+    "sass": "^1.86.0"
   }
 }
