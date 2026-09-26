@@ -2,9 +2,35 @@
 
 ---
 
-<div class="nav-links">
-  <a href="/">Home</a>
-  <a href="/about/">About</a>
-  <a href="/blog/">Blog</a>
-  <a href="/tags/">Tags</a>
-</div>
+<nav class="bg-primary-300 dark:bg-primary-700">
+  <div class="mx-auto px-2 sm:px-6 lg:px-8">
+    <div class="relative flex h-16 items-center justify-between">
+     
+      <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+        <div class="flex shrink-0 items-center">
+          <img class="h-8 w-auto" src="../favicon.svg" alt="Company Logo" />
+        </div>
+        <div class="hidden sm:ml-6 sm:block">
+          <div class="flex absolute right-0 space-x-4">
+            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+      <a href="/"       class="block rounded-md px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-primary-200 dark:hover:bg-primary-800 hover:text-primary-800 dark:hover:text-primary-200 hover:no-underline">Home</a>
+      <a href="/about/" class="block rounded-md px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-primary-200 dark:hover:bg-primary-800 hover:text-primary-800 dark:hover:text-primary-200 hover:no-underline">About</a>
+      <a href="/blog/"  class="block rounded-md px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-primary-200 dark:hover:bg-primary-800 hover:text-primary-800 dark:hover:text-primary-200 hover:no-underline">Blog</a>
+      <a href="/tags/"  class="block rounded-md px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-primary-200 dark:hover:bg-primary-800 hover:text-primary-800 dark:hover:text-primary-200 hover:no-underline">Tags</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu, show/hide based on menu state. -->
+  <div class="sm:hidden" id="mobile-menu">
+    <div class="space-y-1 px-2 pt-2 pb-3">
+      <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+      <a href="/"       class="block rounded-md px-3 py-2 text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-primary-200 dark:hover:bg-primary-800 hover:text-primary-800 dark:hover:text-primary-200 hover:no-underline">Home</a>
+      <a href="/about/" class="block rounded-md px-3 py-2 text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-primary-200 dark:hover:bg-primary-800 hover:text-primary-800 dark:hover:text-primary-200 hover:no-underline">About</a>
+      <a href="/blog/"  class="block rounded-md px-3 py-2 text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-primary-200 dark:hover:bg-primary-800 hover:text-primary-800 dark:hover:text-primary-200 hover:no-underline">Blog</a>
+      <a href="/tags/"  class="block rounded-md px-3 py-2 text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-primary-200 dark:hover:bg-primary-800 hover:text-primary-800 dark:hover:text-primary-200 hover:no-underline">Tags</a>
+    </div>
+  </div>
+</nav>

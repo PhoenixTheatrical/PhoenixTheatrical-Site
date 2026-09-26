@@ -1,6 +1,11 @@
 ---
 const { platform, link } = Astro.props;
 ---
-
-
-<a href={link}>{platform}</a>
+  <div class="flex mt-4 sm:justify-center sm:mt-0">
+    <a
+      href={link}
+      class="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5"
+    > {platform}
+      <span class="sr-only">{platform}</span>
+    </a>
+  </div>
