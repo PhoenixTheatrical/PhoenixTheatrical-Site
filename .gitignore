@@ -1,9 +1,3 @@
-_site
-.sass-cache
-.jekyll-cache
-.jekyll-metadata
-vendor
-
 # build output
 dist/
 # generated types
@@ -29,3 +23,7 @@ pnpm-debug.log*
 # Dev Environment setting folder
 .idea/
 .vscode/
+
+# Ignore Agent and Claude files
+AGENTS.md
+CLAUDE.md

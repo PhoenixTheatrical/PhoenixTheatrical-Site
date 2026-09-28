@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css?family=Oxanium:wght@200..800&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-brand:
+    Oxanium, Futura, "Trebuchet MS", Arial, "Segoe UI", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+  /* BRANDING COLORS COLORS */
+  /* Primary Color */
+  --color-brand1: #0081a0;
+
+  --color-brand1-50: #f1fbfe;
+  --color-brand1-100: #def6fc;
+  --color-brand1-200: #bdeefa;
+  --color-brand1-300: #92e2f6;
+  --color-brand1-400: #42d9ff;
+  --color-brand1-500: #00ccff;
+  --color-brand1-600: #00a3cc;
+  --color-brand1-700: #0087a8;
+  --color-brand1-800: #0a647b;
+  --color-brand1-900: #084d5e;
+  --color-brand1-950: #052e39;
+
+  /* Split Complement 1 */
+  --color-brand2: #a16600;
+
+  --color-brand2-50: #fbf7f3;
+  --color-brand2-100: #f7ede4;
+  --color-brand2-200: #eedbc8;
+  --color-brand2-300: #e4c4a5;
+  --color-brand2-400: #dca165;
+  --color-brand2-500: #d0802f;
+  --color-brand2-600: #a66626;
+  --color-brand2-700: #89541f;
+  --color-brand2-800: #66421f;
+  --color-brand2-900: #4e3318;
+  --color-brand2-950: #2f1f0e;
+
+  /* Split Complement 2 */
+  --color-brand3: #a13100;
+
+  --color-brand3-50: #fef5f1;
+  --color-brand3-100: #fce7de;
+  --color-brand3-200: #facfbd;
+  --color-brand3-300: #f6b092;
+  --color-brand3-400: #ff7b42;
+  --color-brand3-500: #ff4d00;
+  --color-brand3-600: #cc3d00;
+  --color-brand3-700: #a83200;
+  --color-brand3-800: #7b2c0a;
+  --color-brand3-900: #5e2208;
+  --color-brand3-950: #391405;
+
+}
+@layer components {
+  html {
+    @apply px-2 pb-4
+    bg-zinc-200 dark:bg-zinc-900;
+  }
+  body {
+    @apply font-brand
+    text-brand1-900 dark:text-brand1-100;
+  }
+  a {
+    @apply text-brand1-700 dark:text-brand1-300
+    hover:text-brand2 dark:hover:text-brand2
+    underline
+    decoration-brand2 dark:decoration-brand2
+    hover:decoration-brand1-700 dark:hover:decoration-brand1-300;
+  }
+}
